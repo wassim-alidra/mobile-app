@@ -24,10 +24,10 @@ class AppTheme {
   static const Color statusAssigned = Color(0xFF3B82F6);
   static const Color statusOnWay = Color(0xFF8B5CF6);
   static const Color statusCharging = Color(0xFFF59E0B);
-  static const Color statusNearArrival = Color(0xFFEC4899);
   static const Color statusDelivered = Color(0xFF10B981);
   static const Color statusCancelled = Color(0xFFEF4444);
   static const Color statusPending = Color(0xFF6B7280);
+
 
   // ─── Gradients ──────────────────────────────────────────────────
   static const LinearGradient primaryGradient = LinearGradient(
@@ -224,10 +224,9 @@ class AppTheme {
         return statusOnWay;
       case 'CHARGING':
         return statusCharging;
-      case 'NEAR_ARRIVAL':
-        return statusNearArrival;
       case 'DELIVERED':
         return statusDelivered;
+
       case 'CANCELLED':
         return statusCancelled;
       case 'PENDING':
@@ -245,10 +244,9 @@ class AppTheme {
         return 'On Way to Farm';
       case 'CHARGING':
         return 'Loading Cargo';
-      case 'NEAR_ARRIVAL':
-        return 'Near Destination';
       case 'DELIVERED':
         return 'Delivered';
+
       case 'CANCELLED':
         return 'Cancelled';
       case 'PENDING':
@@ -266,10 +264,9 @@ class AppTheme {
         return Icons.local_shipping_rounded;
       case 'CHARGING':
         return Icons.inventory_2_rounded;
-      case 'NEAR_ARRIVAL':
-        return Icons.location_on_rounded;
       case 'DELIVERED':
         return Icons.check_circle_rounded;
+
       case 'CANCELLED':
         return Icons.cancel_rounded;
       case 'PENDING':

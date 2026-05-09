@@ -8,6 +8,12 @@ import '../../notifications/providers/notification_provider.dart';
 import '../../deliveries/models/delivery_model.dart';
 import '../../../core/constants/app_constants.dart';
 
+// Farmer Screens
+import '../../farmer/screens/farmer_home_screen.dart';
+import '../../farmer/screens/farmer_orders_screen.dart';
+import '../../farmer/screens/farmer_stats_screen.dart';
+import '../../profile/screens/profile_screen.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -19,6 +25,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -32,7 +39,10 @@ class _DashboardScreenState extends State<DashboardScreen>
     _animController.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<DeliveryProvider>().fetchDeliveries();
+      final auth = context.read<AuthProvider>();
+      if (auth.user?.role == 'TRANSPORTER') {
+        context.read<DeliveryProvider>().fetchDeliveries();
+      }
       context.read<NotificationProvider>().fetchNotifications();
     });
   }
@@ -47,7 +57,24 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final user = auth.user;
+    final isFarmer = user?.role == 'FARMER';
 
+    if (isFarmer) {
+      return Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: const [
+            FarmerHomeScreen(),
+            FarmerOrdersScreen(),
+            FarmerStatsScreen(),
+            ProfileScreen(),
+          ],
+        ),
+        bottomNavigationBar: _buildFarmerBottomNav(),
+      );
+    }
+
+    // Default Transporter View
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
@@ -67,11 +94,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                 slivers: [
                   SliverToBoxAdapter(child: _buildHeader(user?.username ?? '')),
                   SliverToBoxAdapter(child: _buildStatsRow()),
-                  SliverToBoxAdapter(child: _buildSectionTitle('Active Deliveries', '/deliveries')),
+                  SliverToBoxAdapter(
+                      child: _buildSectionTitle('Active Deliveries', '/deliveries')),
                   SliverToBoxAdapter(child: _buildActiveDeliveries()),
-                  SliverToBoxAdapter(child: _buildSectionTitle('Quick Actions', null)),
+                  SliverToBoxAdapter(
+                      child: _buildSectionTitle('Quick Actions', null)),
                   SliverToBoxAdapter(child: _buildQuickActions()),
-                  SliverToBoxAdapter(child: _buildSectionTitle('Recent Notifications', '/notifications')),
+                  SliverToBoxAdapter(child: _buildSectionTitle(
+                      'Recent Notifications', '/notifications')),
                   SliverToBoxAdapter(child: _buildRecentNotifications()),
                   const SliverToBoxAdapter(child: SizedBox(height: 100)),
                 ],
@@ -81,6 +111,53 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
       ),
       bottomNavigationBar: _buildBottomNav(),
+    );
+  }
+
+  // ─── Farmer Navigation ───────────────────────────────────────────
+
+  Widget _buildFarmerBottomNav() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.bgCard,
+        border: Border(
+          top: BorderSide(color: AppTheme.textMuted.withOpacity(0.15)),
+        ),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _NavItem(
+                icon: Icons.dashboard_rounded,
+                label: 'Home',
+                isActive: _currentIndex == 0,
+                onTap: () => setState(() => _currentIndex = 0),
+              ),
+              _NavItem(
+                icon: Icons.receipt_long_rounded,
+                label: 'Orders',
+                isActive: _currentIndex == 1,
+                onTap: () => setState(() => _currentIndex = 1),
+              ),
+              _NavItem(
+                icon: Icons.bar_chart_rounded,
+                label: 'Stats',
+                isActive: _currentIndex == 2,
+                onTap: () => setState(() => _currentIndex = 2),
+              ),
+              _NavItem(
+                icon: Icons.person_outline_rounded,
+                label: 'Profile',
+                isActive: _currentIndex == 3,
+                onTap: () => setState(() => _currentIndex = 3),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

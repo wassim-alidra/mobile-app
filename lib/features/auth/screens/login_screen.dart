@@ -322,7 +322,7 @@ class _LoginScreenState extends State<LoginScreen>
               ),
               validator: (v) {
                 if (v == null || v.isEmpty) return 'Password is required';
-                if (v.length < 6) return 'Password too short';
+                if (v.length < 3) return 'Password too short';
                 return null;
               },
             ),

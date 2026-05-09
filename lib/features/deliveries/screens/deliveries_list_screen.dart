@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../deliveries/providers/delivery_provider.dart';
 import '../../deliveries/models/delivery_model.dart';
+import '../widgets/available_request_tile.dart';
 
 class DeliveriesListScreen extends StatefulWidget {
   const DeliveriesListScreen({super.key});
@@ -19,9 +20,10 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<DeliveryProvider>().fetchDeliveries();
+      context.read<DeliveryProvider>().fetchAvailableRequests();
     });
   }
 
@@ -61,7 +63,7 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen>
                     ),
                     const SizedBox(width: 14),
                     const Text(
-                      'My Deliveries',
+                      'Market & Deliveries',
                       style: TextStyle(
                         color: AppTheme.textPrimary,
                         fontSize: 22,
@@ -92,10 +94,11 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen>
                     labelColor: Colors.white,
                     unselectedLabelColor: AppTheme.textSecondary,
                     labelStyle: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w700),
+                        fontSize: 12, fontWeight: FontWeight.w700),
                     dividerColor: Colors.transparent,
                     padding: const EdgeInsets.all(4),
                     tabs: const [
+                      Tab(text: 'Available'),
                       Tab(text: 'Active'),
                       Tab(text: 'Completed'),
                     ],
@@ -109,23 +112,30 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen>
                 child: Consumer<DeliveryProvider>(
                   builder: (context, provider, _) {
                     if (provider.state == DeliveryLoadState.loading &&
-                        provider.deliveries.isEmpty) {
+                        provider.deliveries.isEmpty && provider.availableRequests.isEmpty) {
                       return const Center(
                         child: CircularProgressIndicator(
                             color: AppTheme.primary),
                       );
                     }
 
-                    if (provider.state == DeliveryLoadState.error) {
+                    if (provider.state == DeliveryLoadState.error && provider.deliveries.isEmpty) {
                       return _ErrorView(
                         message: provider.errorMessage ?? 'Failed to load',
-                        onRetry: () => provider.fetchDeliveries(),
+                        onRetry: () {
+                          provider.fetchDeliveries();
+                          provider.fetchAvailableRequests();
+                        },
                       );
                     }
 
                     return TabBarView(
                       controller: _tabController,
                       children: [
+                        _AvailableRequestsList(
+                          requests: provider.availableRequests,
+                          onRefresh: () => provider.fetchAvailableRequests(),
+                        ),
                         _DeliveryList(
                           deliveries: provider.activeDeliveries,
                           emptyMessage: 'No active deliveries',
@@ -144,6 +154,50 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen>
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _AvailableRequestsList extends StatelessWidget {
+  final List<dynamic> requests;
+  final Future<void> Function() onRefresh;
+
+  const _AvailableRequestsList({required this.requests, required this.onRefresh});
+
+  @override
+  Widget build(BuildContext context) {
+    if (requests.isEmpty) {
+      return RefreshIndicator(
+        color: AppTheme.primary,
+        backgroundColor: AppTheme.bgCard,
+        onRefresh: onRefresh,
+        child: ListView(
+          children: [
+            const SizedBox(height: 80),
+            Icon(Icons.request_page_outlined, color: AppTheme.textMuted, size: 56),
+            const SizedBox(height: 16),
+            const Text(
+              'No delivery requests available\nin the market right now.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppTheme.textMuted, fontSize: 15),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      color: AppTheme.primary,
+      backgroundColor: AppTheme.bgCard,
+      onRefresh: onRefresh,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: requests.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          return AvailableRequestTile(request: requests[index]);
+        },
       ),
     );
   }

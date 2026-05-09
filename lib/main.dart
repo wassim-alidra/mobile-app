@@ -6,6 +6,9 @@ import 'core/router/app_router.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/deliveries/providers/delivery_provider.dart';
 import 'features/notifications/providers/notification_provider.dart';
+import 'features/farmer/providers/farmer_provider.dart';
+import 'features/auth/models/user_model.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +50,14 @@ class AgriGovTransporterApp extends StatelessWidget {
             return notif;
           },
         ),
+        ChangeNotifierProxyProvider<AuthProvider, FarmerProvider>(
+          create: (_) => FarmerProvider(),
+          update: (_, auth, farmer) {
+            farmer!.setUserAndToken(auth.user, auth.token);
+            return farmer;
+          },
+        ),
+
       ],
       child: Consumer<AuthProvider>(
         builder: (context, auth, _) {

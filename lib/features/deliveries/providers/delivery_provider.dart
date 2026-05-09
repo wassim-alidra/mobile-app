@@ -9,15 +9,21 @@ enum DeliveryLoadState { idle, loading, loaded, error }
 class DeliveryProvider extends ChangeNotifier {
   String? _token;
   List<DeliveryModel> _deliveries = [];
+  List<dynamic> _availableRequests = [];
   DeliveryModel? _currentDelivery;
   DeliveryLoadState _state = DeliveryLoadState.idle;
+  bool _isAccepting = false;
+
   String? _errorMessage;
   Timer? _pollingTimer;
 
   List<DeliveryModel> get deliveries => _deliveries;
+  List<dynamic> get availableRequests => _availableRequests;
   DeliveryModel? get currentDelivery => _currentDelivery;
   DeliveryLoadState get state => _state;
+  bool get isAccepting => _isAccepting;
   String? get errorMessage => _errorMessage;
+
 
   List<DeliveryModel> get activeDeliveries =>
       _deliveries.where((d) => d.isActive).toList();
@@ -30,7 +36,9 @@ class DeliveryProvider extends ChangeNotifier {
       _token = token;
       if (token != null) {
         fetchDeliveries();
+        fetchAvailableRequests();
         _startPolling();
+
       } else {
         _stopPolling();
         _deliveries = [];
@@ -86,6 +94,72 @@ class DeliveryProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> fetchAvailableRequests({bool silent = false}) async {
+    if (_token == null) return;
+
+    if (!silent) {
+      _state = DeliveryLoadState.loading;
+      notifyListeners();
+    }
+
+    try {
+      final api = ApiService(token: _token);
+      _availableRequests = await api.getAvailableOrders();
+      _state = DeliveryLoadState.loaded;
+      _errorMessage = null;
+    } on ApiException catch (e) {
+      _state = DeliveryLoadState.error;
+      _errorMessage = e.message;
+    } catch (e) {
+      _state = DeliveryLoadState.error;
+      _errorMessage = 'Failed to load requests';
+    }
+
+    notifyListeners();
+  }
+
+  Future<bool> acceptRequest(int orderId) async {
+    if (_token == null) return false;
+
+    _isAccepting = true;
+    notifyListeners();
+
+    try {
+      final api = ApiService(token: _token);
+      await api.acceptDelivery(orderId);
+      
+      // Refresh both lists
+      await fetchDeliveries(silent: true);
+      await fetchAvailableRequests(silent: true);
+      
+      _isAccepting = false;
+      notifyListeners();
+      return true;
+    } on ApiException catch (e) {
+      _errorMessage = e.message;
+      _isAccepting = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = 'Failed to accept delivery';
+      _isAccepting = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getRouteData(String fWilaya, String bWilaya) async {
+    if (_token == null) return null;
+    try {
+      final api = ApiService(token: _token);
+      return await api.calculateRoute(fWilaya, bWilaya);
+    } catch (e) {
+      debugPrint('Error getting route data: $e');
+      return null;
+    }
+  }
+
 
   Future<DeliveryModel?> fetchDelivery(int id) async {
     if (_token == null) return null;

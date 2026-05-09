@@ -13,7 +13,7 @@ class ApiService {
       'Accept': 'application/json',
     };
     if (_token != null) {
-      headers['Authorization'] = 'Bearer $_token';
+      headers['Authorization'] = 'Bearer ${_token!.trim()}';
     }
     return headers;
   }
@@ -54,11 +54,33 @@ class ApiService {
       headers: _headers,
     );
     final data = _handleResponse(response);
-    if (data.containsKey('results')) {
+    if (data is Map && data.containsKey('results')) {
       return data['results'] as List<dynamic>;
     }
     return data as List<dynamic>? ?? [];
   }
+
+  Future<List<dynamic>> getAvailableOrders() async {
+    final response = await http.get(
+      Uri.parse('$kApiUrl$kAvailableOrdersEndpoint'),
+      headers: _headers,
+    );
+    final data = _handleResponse(response);
+    if (data is Map && data.containsKey('results')) {
+      return data['results'] as List<dynamic>;
+    }
+    return data as List<dynamic>? ?? [];
+  }
+
+  Future<Map<String, dynamic>> acceptDelivery(int orderId) async {
+    final response = await http.post(
+      Uri.parse('$kApiUrl$kDeliveriesEndpoint'),
+      headers: _headers,
+      body: jsonEncode({'order': orderId}),
+    );
+    return _handleResponse(response);
+  }
+
 
   Future<Map<String, dynamic>> getDelivery(int id) async {
     final response = await http.get(
@@ -87,6 +109,19 @@ class ApiService {
     );
     return _handleResponse(response);
   }
+
+  // ─── Routing ─────────────────────────────────────────────────────
+
+  Future<Map<String, dynamic>> calculateRoute(
+      String farmerWilaya, String buyerWilaya) async {
+    final response = await http.get(
+      Uri.parse(
+          '$kApiUrl$kRoutingEndpoint?farmer_wilaya=$farmerWilaya&buyer_wilaya=$buyerWilaya'),
+      headers: _headers,
+    );
+    return _handleResponse(response);
+  }
+
 
   // ─── Notifications ───────────────────────────────────────────────
 
@@ -128,6 +163,34 @@ class ApiService {
       Uri.parse('$kApiUrl$kCurrentUserEndpoint'),
       headers: _headers,
       body: jsonEncode(data),
+    );
+    return _handleResponse(response);
+  }
+
+  // ─── Generic Methods ─────────────────────────────────────────────
+
+  Future<dynamic> get(String endpoint) async {
+    final response = await http.get(
+      Uri.parse('$kApiUrl$endpoint'),
+      headers: _headers,
+    );
+    return _handleResponse(response);
+  }
+
+  Future<dynamic> post(String endpoint, Map<String, dynamic> body) async {
+    final response = await http.post(
+      Uri.parse('$kApiUrl$endpoint'),
+      headers: _headers,
+      body: jsonEncode(body),
+    );
+    return _handleResponse(response);
+  }
+
+  Future<dynamic> patch(String endpoint, Map<String, dynamic> body) async {
+    final response = await http.patch(
+      Uri.parse('$kApiUrl$endpoint'),
+      headers: _headers,
+      body: jsonEncode(body),
     );
     return _handleResponse(response);
   }

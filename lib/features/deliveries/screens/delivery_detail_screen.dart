@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/delivery_provider.dart';
 import '../models/delivery_model.dart';
+import '../widgets/route_map_bottom_sheet.dart';
 
 class DeliveryDetailScreen extends StatefulWidget {
   final int deliveryId;
@@ -21,7 +22,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
 
   // Ordered pipeline of statuses
   static const List<String> _pipeline = [
-    'ASSIGNED', 'ON_WAY', 'CHARGING', 'NEAR_ARRIVAL', 'DELIVERED'
+    'ASSIGNED', 'ON_WAY', 'CHARGING', 'DELIVERED'
   ];
 
   @override
@@ -191,11 +192,83 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
           _buildProductCard(d),
           const SizedBox(height: 16),
           _buildPartiesCard(d),
+          const SizedBox(height: 16),
+          _buildMapCard(d),
           const SizedBox(height: 100),
         ],
       ),
     );
   }
+
+  Widget _buildMapCard(DeliveryModel d) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: AppTheme.cardGradient,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.primary.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.map_outlined, color: AppTheme.primary, size: 20),
+              const SizedBox(width: 10),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Delivery Route',
+                        style: TextStyle(
+                            color: AppTheme.textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700)),
+                    Text('View pickup and destination locations',
+                        style: TextStyle(
+                            color: AppTheme.textSecondary, fontSize: 12)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => RouteMapBottomSheet(order: {
+                    'id': d.order.id,
+                    'product_name': d.order.product?.name,
+                    'quantity': d.order.quantity,
+                    'total_price': d.order.totalPrice,
+                    'farmer_name': d.order.product?.farmerUsername,
+                    'buyer_name': d.order.buyer?.username,
+                    'farmer_wilaya': d.order.product?.farmerWilaya,
+                    'buyer_wilaya': d.order.buyer?.wilaya,
+                  }),
+                );
+              },
+              icon: const Icon(Icons.navigation_outlined, size: 18),
+              label: const Text('Open Route Map'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary.withOpacity(0.15),
+                foregroundColor: AppTheme.primary,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   Widget _buildStatusBanner(DeliveryModel d) {
     final color = AppTheme.getStatusColor(d.status);
