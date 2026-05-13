@@ -1,8 +1,8 @@
 // Base URL for the AgriGov Django backend
-// Change this to your local network IP when testing on a physical device
-// e.g. 'http://192.168.1.100:8000'
-const String kBaseUrl = 'http://192.168.1.17:8000'; // Physical device on LAN
-// const String kBaseUrl = 'http://192.168.X.X:8000'; // Physical device on LAN
+// Use '10.0.2.2' for Android Emulator to access host's localhost
+// Use your local IP (e.g. 192.168.1.X) for physical devices
+const String kBaseUrl = 'http://192.168.1.17:8000'; // For Physical Device
+// const String kBaseUrl = 'http://10.0.2.2:8000'; // For Emulator
 
 const String kApiUrl = '$kBaseUrl/api';
 const String kTokenUrl = '$kApiUrl/token/';
@@ -24,6 +24,11 @@ const String kRoutingEndpoint = '/routing/calculate/';
 const String kTokenKey = 'auth_token';
 const String kRefreshTokenKey = 'refresh_token';
 const String kUserDataKey = 'user_data';
+
+// Cloudinary (Photo Storage)
+const String kCloudinaryCloudName = 'duoabslmx';
+const String kCloudinaryApiKey = '793242198576965';
+const String kCloudinaryApiSecret = 'W1seLruDxbbuMEGS-4eyZI9EJ4s';
 
 // App Constants
 const String kAppName = 'AgriGov Transporter';

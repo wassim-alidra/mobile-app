@@ -14,12 +14,12 @@ class AppTheme {
   static const Color bgCard = Color(0xFF111827);        // Card surfaces
   static const Color bgSurface = Color(0xFF1C2537);     // Elevated surfaces
   static const Color bgGlass = Color(0xFF1E2D40);       // Glassmorphism
-
+ 
   // ─── Text Colors ────────────────────────────────────────────────
   static const Color textPrimary = Color(0xFFF0F4FF);
   static const Color textSecondary = Color(0xFF8B9CB8);
   static const Color textMuted = Color(0xFF4A5568);
-
+ 
   // ─── Status Colors ──────────────────────────────────────────────
   static const Color statusAssigned = Color(0xFF3B82F6);
   static const Color statusOnWay = Color(0xFF8B5CF6);
@@ -28,6 +28,15 @@ class AppTheme {
   static const Color statusCancelled = Color(0xFFEF4444);
   static const Color statusPending = Color(0xFF6B7280);
 
+  // ─── Light Background Layers ─────────────────────────────────────
+  static const Color bgLight = Color(0xFFF1F5F9);       // Soft gray background
+  static const Color bgWhite = Color(0xFFFFFFFF);       // Pure white surfaces
+  static const Color bgInstitutional = Color(0xFFF8FAFC); 
+
+  // ─── Light Mode Text Colors ─────────────────────────────────────
+  static const Color textDark = Color(0xFF0F172A);      // Slate 900
+  static const Color textMutedLight = Color(0xFF64748B); // Slate 500
+  static const Color borderLight = Color(0xFFE2E8F0);
 
   // ─── Gradients ──────────────────────────────────────────────────
   static const LinearGradient primaryGradient = LinearGradient(
@@ -200,17 +209,87 @@ class AppTheme {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: bgSurface,
-        contentTextStyle: GoogleFonts.poppins(color: textPrimary),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    );
+  }
+
+  static ThemeData get lightTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorScheme: const ColorScheme.light(
+        primary: primary,
+        secondary: secondary,
+        surface: bgWhite,
+        error: statusCancelled,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: textDark,
+      ),
+      scaffoldBackgroundColor: bgLight,
+      cardColor: bgWhite,
+      textTheme: GoogleFonts.poppinsTextTheme().copyWith(
+        displayLarge: GoogleFonts.poppins(
+          color: textDark,
+          fontSize: 32,
+          fontWeight: FontWeight.w700,
+        ),
+        headlineLarge: GoogleFonts.poppins(
+          color: textDark,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+        ),
+        headlineMedium: GoogleFonts.poppins(
+          color: textDark,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+        ),
+        titleLarge: GoogleFonts.poppins(
+          color: textDark,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+        ),
+        bodyLarge: GoogleFonts.poppins(
+          color: textDark,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+        bodyMedium: GoogleFonts.poppins(
+          color: textDark,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        bodySmall: GoogleFonts.poppins(
+          color: textMutedLight,
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: textMuted.withOpacity(0.2),
-        thickness: 1,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: textDark),
+        titleTextStyle: TextStyle(
+          color: textDark,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primary,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: textDark,
+          side: const BorderSide(color: Color(0xFFE2E8F0)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        ),
       ),
     );
   }
@@ -219,8 +298,10 @@ class AppTheme {
   static Color getStatusColor(String status) {
     switch (status.toUpperCase()) {
       case 'ASSIGNED':
+      case 'DISPATCHED':
         return statusAssigned;
       case 'ON_WAY':
+      case 'IN_TRANSIT':
         return statusOnWay;
       case 'CHARGING':
         return statusCharging;
@@ -241,7 +322,7 @@ class AppTheme {
       case 'ASSIGNED':
         return 'Assigned';
       case 'ON_WAY':
-        return 'On Way to Farm';
+        return 'In Transit';
       case 'CHARGING':
         return 'Loading Cargo';
       case 'DELIVERED':
@@ -261,6 +342,7 @@ class AppTheme {
       case 'ASSIGNED':
         return Icons.assignment_turned_in_rounded;
       case 'ON_WAY':
+      case 'IN_TRANSIT':
         return Icons.local_shipping_rounded;
       case 'CHARGING':
         return Icons.inventory_2_rounded;

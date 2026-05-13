@@ -34,127 +34,124 @@ class _HistoryScreenState extends State<HistoryScreen> {
         0.0, (sum, d) => sum + d.order.quantity);
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => context.pop(),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppTheme.bgSurface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: AppTheme.textMuted.withOpacity(0.2)),
-                        ),
-                        child: const Icon(Icons.arrow_back_ios_new_rounded,
-                            color: AppTheme.textPrimary, size: 18),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.borderLight),
                       ),
+                      child: const Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppTheme.textDark, size: 18),
                     ),
-                    const SizedBox(width: 14),
-                    const Text(
-                      'Delivery History',
-                      style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  ),
+                  const SizedBox(width: 14),
+                  const Text(
+                    'Logistics History',
+                    style: TextStyle(
+                      color: AppTheme.textDark,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // Summary cards
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _SummaryCard(
-                        label: 'Completed',
-                        value: '${completed.length}',
-                        icon: Icons.check_circle_rounded,
-                        color: AppTheme.statusDelivered,
-                      ),
+            // Summary cards
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _SummaryCard(
+                      label: 'Deliveries',
+                      value: '${completed.length}',
+                      icon: Icons.check_circle_rounded,
+                      color: AppTheme.primary,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _SummaryCard(
-                        label: 'Earnings',
-                        value: '${totalFee.toStringAsFixed(0)} DA',
-                        icon: Icons.payments_rounded,
-                        color: AppTheme.accent,
-                      ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _SummaryCard(
+                      label: 'Revenue',
+                      value: '${totalFee.toStringAsFixed(0)} DA',
+                      icon: Icons.account_balance_wallet_rounded,
+                      color: const Color(0xFF0F172A),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _SummaryCard(
-                        label: 'Total kg',
-                        value: '${totalKg.toStringAsFixed(0)}',
-                        icon: Icons.scale_rounded,
-                        color: AppTheme.secondary,
-                      ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _SummaryCard(
+                      label: 'Total Cargo',
+                      value: '${totalKg.toStringAsFixed(0)} kg',
+                      icon: Icons.inventory_2_rounded,
+                      color: const Color(0xFF64748B),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-              // List
-              Expanded(
-                child: provider.state == DeliveryLoadState.loading &&
-                        provider.deliveries.isEmpty
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                            color: AppTheme.primary))
-                    : completed.isEmpty
-                        ? const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.history_rounded,
-                                    color: AppTheme.textMuted, size: 56),
-                                SizedBox(height: 16),
-                                Text(
-                                  'No completed deliveries yet',
-                                  style: TextStyle(
-                                      color: AppTheme.textMuted,
-                                      fontSize: 15),
-                                ),
-                              ],
-                            ),
-                          )
-                        : RefreshIndicator(
-                            color: AppTheme.primary,
-                            backgroundColor: AppTheme.bgCard,
-                            onRefresh: () =>
-                                provider.fetchDeliveries(),
-                            child: ListView.separated(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20),
-                              itemCount: completed.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 12),
-                              itemBuilder: (context, index) {
-                                return _HistoryTile(
-                                    delivery: completed[index]);
-                              },
-                            ),
+            // List
+            Expanded(
+              child: provider.state == DeliveryLoadState.loading &&
+                      provider.deliveries.isEmpty
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                          color: AppTheme.primary))
+                  : completed.isEmpty
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.history_rounded,
+                                  color: AppTheme.textMutedLight, size: 56),
+                              SizedBox(height: 16),
+                              Text(
+                                'No completed logistics found.',
+                                style: TextStyle(
+                                    color: AppTheme.textMutedLight,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
-              ),
-            ],
-          ),
+                        )
+                      : RefreshIndicator(
+                          color: AppTheme.primary,
+                          onRefresh: () =>
+                              provider.fetchDeliveries(),
+                          child: ListView.separated(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20),
+                            itemCount: completed.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              return _HistoryTile(
+                                  delivery: completed[index]);
+                            },
+                          ),
+                        ),
+            ),
+          ],
         ),
       ),
     );
@@ -177,29 +174,30 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.25)),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         children: [
           Icon(icon, color: color, size: 22),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Text(
             value,
             style: TextStyle(
-              color: color,
+              color: AppTheme.textDark,
               fontSize: 14,
               fontWeight: FontWeight.w800,
             ),
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 4),
           Text(
-            label,
+            label.toUpperCase(),
             style: const TextStyle(
-                color: AppTheme.textSecondary, fontSize: 10),
+                color: AppTheme.textMutedLight, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 0.5),
           ),
         ],
       ),
@@ -228,21 +226,20 @@ class _HistoryTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: AppTheme.cardGradient,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-              color: AppTheme.statusDelivered.withOpacity(0.2)),
+          border: Border.all(color: AppTheme.borderLight),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppTheme.statusDelivered.withOpacity(0.15),
+                color: const Color(0xFF065F46).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.check_circle_rounded,
-                  color: AppTheme.statusDelivered, size: 20),
+                  color: Color(0xFF065F46), size: 20),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -252,16 +249,16 @@ class _HistoryTile extends StatelessWidget {
                   Text(
                     product?.name ?? 'Order #${delivery.order.id}',
                     style: const TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                      color: AppTheme.textDark,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    dateStr.isNotEmpty ? dateStr : 'Delivered',
+                    dateStr.isNotEmpty ? dateStr : 'Finalized',
                     style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 12),
+                        color: AppTheme.textMutedLight, fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -272,8 +269,8 @@ class _HistoryTile extends StatelessWidget {
                 Text(
                   '${delivery.deliveryFee.toStringAsFixed(0)} DA',
                   style: const TextStyle(
-                    color: AppTheme.primary,
-                    fontSize: 14,
+                    color: AppTheme.textDark,
+                    fontSize: 15,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -281,7 +278,7 @@ class _HistoryTile extends StatelessWidget {
                 Text(
                   '${delivery.order.quantity.toStringAsFixed(1)} kg',
                   style: const TextStyle(
-                      color: AppTheme.textMuted, fontSize: 11),
+                      color: AppTheme.textMutedLight, fontSize: 11, fontWeight: FontWeight.w600),
                 ),
               ],
             ),

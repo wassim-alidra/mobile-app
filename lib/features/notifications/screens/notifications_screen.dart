@@ -12,16 +12,14 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(context),
-              const SizedBox(height: 8),
-              Expanded(child: _buildList(context)),
-            ],
-          ),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context),
+            const SizedBox(height: 8),
+            Expanded(child: _buildList(context)),
+          ],
         ),
       ),
     );
@@ -40,13 +38,12 @@ class NotificationsScreen extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppTheme.bgSurface,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border:
-                    Border.all(color: AppTheme.textMuted.withOpacity(0.2)),
+                border: Border.all(color: AppTheme.borderLight),
               ),
               child: const Icon(Icons.arrow_back_ios_new_rounded,
-                  color: AppTheme.textPrimary, size: 18),
+                  color: AppTheme.textDark, size: 18),
             ),
           ),
           const SizedBox(width: 14),
@@ -54,9 +51,9 @@ class NotificationsScreen extends StatelessWidget {
             child: Text(
               'Notifications',
               style: TextStyle(
-                color: AppTheme.textPrimary,
+                color: AppTheme.textDark,
                 fontSize: 22,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
@@ -68,7 +65,7 @@ class NotificationsScreen extends StatelessWidget {
                 style: TextStyle(
                   color: AppTheme.primary,
                   fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -91,11 +88,11 @@ class NotificationsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.notifications_none_rounded,
-                color: AppTheme.textMuted, size: 60),
+                color: AppTheme.textMutedLight, size: 60),
             const SizedBox(height: 16),
             const Text(
-              'No notifications yet',
-              style: TextStyle(color: AppTheme.textMuted, fontSize: 16),
+              'No notifications found',
+              style: TextStyle(color: AppTheme.textMutedLight, fontSize: 16, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -104,7 +101,6 @@ class NotificationsScreen extends StatelessWidget {
 
     return RefreshIndicator(
       color: AppTheme.primary,
-      backgroundColor: AppTheme.bgCard,
       onRefresh: () => provider.fetchNotifications(),
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -143,29 +139,29 @@ class _NotifCard extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isRead ? AppTheme.bgCard : AppTheme.primary.withOpacity(0.08),
+          color: isRead ? Colors.white : AppTheme.primary.withOpacity(0.05),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isRead
-                ? AppTheme.textMuted.withOpacity(0.15)
-                : AppTheme.primary.withOpacity(0.3),
+                ? AppTheme.borderLight
+                : AppTheme.primary.withOpacity(0.2),
           ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
                 color: isRead
-                    ? AppTheme.bgSurface
-                    : AppTheme.primary.withOpacity(0.15),
+                    ? AppTheme.bgLight
+                    : AppTheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                Icons.notifications_rounded,
-                color: isRead ? AppTheme.textMuted : AppTheme.primary,
+                isRead ? Icons.notifications_none_rounded : Icons.notifications_active_rounded,
+                color: isRead ? AppTheme.textMutedLight : AppTheme.primary,
                 size: 20,
               ),
             ),
@@ -177,20 +173,19 @@ class _NotifCard extends StatelessWidget {
                   Text(
                     notification.message,
                     style: TextStyle(
-                      color: isRead
-                          ? AppTheme.textSecondary
-                          : AppTheme.textPrimary,
-                      fontSize: 13,
+                      color: AppTheme.textDark,
+                      fontSize: 14,
                       fontWeight:
-                          isRead ? FontWeight.w400 : FontWeight.w500,
+                          isRead ? FontWeight.w500 : FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     timeStr,
                     style: const TextStyle(
-                      color: AppTheme.textMuted,
+                      color: AppTheme.textMutedLight,
                       fontSize: 11,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -198,8 +193,8 @@ class _NotifCard extends StatelessWidget {
             ),
             if (!isRead)
               Container(
-                width: 8,
-                height: 8,
+                width: 10,
+                height: 10,
                 decoration: const BoxDecoration(
                   color: AppTheme.primary,
                   shape: BoxShape.circle,

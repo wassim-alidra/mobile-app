@@ -52,11 +52,11 @@ class FarmerOrderCard extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.25)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,80 +66,86 @@ class FarmerOrderCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Order #${order.id}',
+                'ORDER REF: #${order.id}',
                 style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textDark,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
                 ),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(20),
+                  color: color.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  _statusLabel(order.status),
+                  _statusLabel(order.status).toUpperCase(),
                   style: TextStyle(
                       color: color,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 20),
+          // Product Info
+          Text(
+            order.productName,
+            style: const TextStyle(
+              color: AppTheme.textDark,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           const SizedBox(height: 12),
-          // Product & Buyer
+          // Details
           _Row(
-              icon: Icons.inventory_2_rounded,
-              label: order.productName,
-              iconColor: AppTheme.primary),
-          const SizedBox(height: 6),
-          _Row(
-              icon: Icons.person_rounded,
+              icon: Icons.person_outline_rounded,
               label: '${order.buyerName} · ${order.buyerWilaya}',
-              iconColor: AppTheme.secondary),
-          const SizedBox(height: 6),
+              iconColor: AppTheme.textMutedLight),
+          const SizedBox(height: 8),
           _Row(
-              icon: Icons.scale_rounded,
-              label:
-                  '${order.quantity.toStringAsFixed(1)} kg — ${order.totalPrice.toStringAsFixed(0)} DA',
-              iconColor: AppTheme.accent),
+              icon: Icons.scale_outlined,
+              label: '${order.quantity.toStringAsFixed(1)} KG — ${order.totalPrice.toStringAsFixed(0)} DA',
+              iconColor: AppTheme.textMutedLight),
+          
           // Actions for pending orders
           if (showActions && order.status == 'PENDING') ...[
-            const SizedBox(height: 14),
+            const SizedBox(height: 24),
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: ElevatedButton(
                     onPressed: onAccept,
-                    icon: const Icon(Icons.check_rounded, size: 16),
-                    label: const Text('Accept'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(6)),
                     ),
+                    child: const Text('APPROVE',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 1)),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: OutlinedButton(
                     onPressed: onReject,
-                    icon: const Icon(Icons.close_rounded, size: 16),
-                    label: const Text('Reject'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.statusCancelled.withOpacity(0.15),
-                      foregroundColor: AppTheme.statusCancelled,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFFE2E8F0)),
+                      foregroundColor: Colors.red.shade600,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(6)),
                     ),
+                    child: const Text('REJECT',
+                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, letterSpacing: 1)),
                   ),
                 ),
               ],
@@ -163,13 +169,13 @@ class _Row extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: iconColor, size: 14),
-        const SizedBox(width: 8),
+        Icon(icon, color: iconColor, size: 16),
+        const SizedBox(width: 10),
         Expanded(
           child: Text(
             label,
             style: const TextStyle(
-                color: AppTheme.textSecondary, fontSize: 13),
+                color: AppTheme.textDark, fontSize: 13, fontWeight: FontWeight.w500),
             overflow: TextOverflow.ellipsis,
           ),
         ),

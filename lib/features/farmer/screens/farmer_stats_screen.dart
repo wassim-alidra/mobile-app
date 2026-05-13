@@ -23,68 +23,69 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Consumer<FarmerProvider>(
-            builder: (context, provider, _) {
-              return RefreshIndicator(
-                color: AppTheme.primary,
-                backgroundColor: AppTheme.bgCard,
-                onRefresh: provider.fetchChartStats,
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-                  children: [
-                    // Header
-                    const Row(
-                      children: [
-                        Icon(Icons.bar_chart_rounded,
-                            color: AppTheme.primary, size: 26),
-                        SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Business Insights',
-                              style: TextStyle(
-                                color: AppTheme.textPrimary,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                              ),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Consumer<FarmerProvider>(
+          builder: (context, provider, _) {
+            return RefreshIndicator(
+              color: AppTheme.primary,
+              onRefresh: provider.fetchChartStats,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                children: [
+                  // Header
+                  const Row(
+                    children: [
+                      Icon(Icons.query_stats_rounded,
+                          color: AppTheme.primary, size: 28),
+                      SizedBox(width: 14),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Business Intelligence',
+                            style: TextStyle(
+                              color: AppTheme.textDark,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
                             ),
-                            Text(
-                              'Sales performance & ratings',
-                              style: TextStyle(
-                                  color: AppTheme.textSecondary, fontSize: 12),
+                          ),
+                          Text(
+                            'STRATEGIC ANALYTICS PORTAL',
+                            style: TextStyle(
+                              color: AppTheme.textMutedLight,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1.2,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    if (provider.loadingChart)
-                      const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(60),
-                          child: CircularProgressIndicator(
-                              color: AppTheme.primary),
-                        ),
-                      )
-                    else if (provider.chartStats == null)
-                      _buildEmpty()
-                    else ...[
-                      _buildTopSelling(provider.chartStats!.topSelling),
-                      const SizedBox(height: 20),
-                      _buildWeeklySales(provider.chartStats!.weeklySales),
-                      const SizedBox(height: 20),
-                      _buildTopRated(provider.chartStats!.topRated),
+                          ),
+                        ],
+                      ),
                     ],
+                  ),
+                  const SizedBox(height: 32),
+
+                  if (provider.loadingChart)
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(60),
+                        child: CircularProgressIndicator(
+                            color: AppTheme.primary),
+                      ),
+                    )
+                  else if (provider.chartStats == null)
+                    _buildEmpty()
+                  else ...[
+                    _buildTopSelling(provider.chartStats!.topSelling),
+                    const SizedBox(height: 24),
+                    _buildWeeklySales(provider.chartStats!.weeklySales),
+                    const SizedBox(height: 24),
+                    _buildTopRated(provider.chartStats!.topRated),
                   ],
-                ),
-              );
-            },
-          ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -94,23 +95,24 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
     return Container(
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(
-        color: AppTheme.bgCard,
-        borderRadius: BorderRadius.circular(18),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: const Center(
         child: Column(
           children: [
-            Icon(Icons.bar_chart_rounded, color: AppTheme.textMuted, size: 56),
-            SizedBox(height: 12),
+            Icon(Icons.insert_chart_outlined_rounded, color: AppTheme.textMutedLight, size: 56),
+            SizedBox(height: 16),
             Text(
-              'No statistics yet',
+              'No Analytics Available',
               style: TextStyle(
-                  color: AppTheme.textSecondary, fontSize: 15),
+                  color: AppTheme.textDark, fontSize: 16, fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 6),
             Text(
-              'Stats will appear after you have completed orders',
-              style: TextStyle(color: AppTheme.textMuted, fontSize: 12),
+              'Business data will populate after order fulfillment.',
+              style: TextStyle(color: AppTheme.textMutedLight, fontSize: 12, fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
           ],
@@ -122,11 +124,11 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
   Widget _buildCard({required String title, required String subtitle,
       required IconData icon, required Color color, required Widget child}) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.textMuted.withOpacity(0.15)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,30 +136,33 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: color, size: 18),
+                child: Icon(icon, color: color, size: 20),
               ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(
-                          color: AppTheme.textPrimary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700)),
-                  Text(subtitle,
-                      style: const TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 11)),
-                ],
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title.toUpperCase(),
+                        style: const TextStyle(
+                            color: AppTheme.textDark,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5)),
+                    Text(subtitle,
+                        style: const TextStyle(
+                            color: AppTheme.textMutedLight, fontSize: 12, fontWeight: FontWeight.w500)),
+                  ],
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           child,
         ],
       ),
@@ -170,16 +175,16 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
     final total = data.fold<double>(0, (s, e) => s + e.value);
     final colors = [
       AppTheme.primary,
-      AppTheme.secondary,
-      AppTheme.accent,
-      AppTheme.statusAssigned,
-      AppTheme.statusOnWay,
+      const Color(0xFF0F172A),
+      const Color(0xFF1E293B),
+      const Color(0xFF334155),
+      const Color(0xFF475569),
     ];
 
     return _buildCard(
-      title: 'Top Selling Products',
-      subtitle: 'Total quantity sold per product',
-      icon: Icons.shopping_bag_rounded,
+      title: 'Market Performance',
+      subtitle: 'Inventory throughput by volume',
+      icon: Icons.inventory_rounded,
       color: AppTheme.primary,
       child: Column(
         children: data.asMap().entries.map((entry) {
@@ -189,7 +194,7 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
           final color = colors[i % colors.length];
 
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -198,23 +203,36 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
                   children: [
                     Text(e.name,
                         style: const TextStyle(
-                            color: AppTheme.textPrimary, fontSize: 13)),
-                    Text('${e.value.toStringAsFixed(0)} kg',
+                            color: AppTheme.textDark, fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text('${e.value.toStringAsFixed(0)} KG',
                         style: TextStyle(
                             color: color,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700)),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w900)),
                   ],
                 ),
-                const SizedBox(height: 6),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: LinearProgressIndicator(
-                    value: pct,
-                    backgroundColor: AppTheme.bgSurface,
-                    valueColor: AlwaysStoppedAnimation<Color>(color),
-                    minHeight: 8,
-                  ),
+                const SizedBox(height: 10),
+                Stack(
+                  children: [
+                    Container(
+                      height: 8,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppTheme.bgLight,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: pct,
+                      child: Container(
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -229,47 +247,51 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
     final maxVal = data.fold<double>(0, (m, e) => e.value > m ? e.value : m);
 
     return _buildCard(
-      title: 'Weekly Sales Volume',
-      subtitle: 'Quantity sold this week',
-      icon: Icons.trending_up_rounded,
-      color: AppTheme.secondary,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: data.map((e) {
-          final ratio = maxVal > 0 ? e.value / maxVal : 0.0;
-          final barH = 80.0 * ratio + 6;
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (e.value > 0)
+      title: 'Weekly Velocity',
+      subtitle: 'Official throughput metrics',
+      icon: Icons.timeline_rounded,
+      color: const Color(0xFF0F172A),
+      child: Container(
+        height: 120,
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: data.map((e) {
+            final ratio = maxVal > 0 ? e.value / maxVal : 0.0;
+            final barH = 100.0 * ratio + 8;
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (e.value > 0)
+                      Text(
+                        e.value.toStringAsFixed(0),
+                        style: const TextStyle(
+                            color: AppTheme.textDark, fontSize: 10, fontWeight: FontWeight.w800),
+                      ),
+                    const SizedBox(height: 6),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 600),
+                      height: barH,
+                      decoration: BoxDecoration(
+                        color: AppTheme.primary,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
-                      e.value.toStringAsFixed(0),
+                      e.name.substring(0, 3).toUpperCase(),
                       style: const TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 9),
+                          color: AppTheme.textMutedLight, fontSize: 9, fontWeight: FontWeight.w900),
                     ),
-                  const SizedBox(height: 4),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 600),
-                    height: barH,
-                    decoration: BoxDecoration(
-                      gradient: AppTheme.primaryGradient,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    e.name,
-                    style: const TextStyle(
-                        color: AppTheme.textMuted, fontSize: 10),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -278,14 +300,14 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
     if (data.isEmpty) return const SizedBox.shrink();
 
     return _buildCard(
-      title: 'Product Ratings',
-      subtitle: 'Average customer feedback',
-      icon: Icons.star_rounded,
-      color: AppTheme.accent,
+      title: 'Quality Assurance',
+      subtitle: 'Stakeholder satisfaction index',
+      icon: Icons.verified_rounded,
+      color: const Color(0xFFF59E0B),
       child: Column(
         children: data.map((e) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Row(
               children: [
                 Expanded(
@@ -293,36 +315,47 @@ class _FarmerStatsScreenState extends State<FarmerStatsScreen> {
                   child: Text(
                     e.name,
                     style: const TextStyle(
-                        color: AppTheme.textPrimary, fontSize: 13),
+                        color: AppTheme.textDark, fontSize: 14, fontWeight: FontWeight.w600),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 Expanded(
                   flex: 4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: e.rating / 5.0,
-                      backgroundColor: AppTheme.bgSurface,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                          AppTheme.accent),
-                      minHeight: 8,
-                    ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 6,
+                        decoration: BoxDecoration(
+                          color: AppTheme.bgLight,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: e.rating / 5.0,
+                        child: Container(
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF59E0B),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Row(
                   children: [
                     const Icon(Icons.star_rounded,
-                        color: AppTheme.accent, size: 14),
-                    const SizedBox(width: 2),
+                        color: Color(0xFFF59E0B), size: 14),
+                    const SizedBox(width: 4),
                     Text(
                       e.rating.toStringAsFixed(1),
                       style: const TextStyle(
-                          color: AppTheme.accent,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700),
+                          color: Color(0xFFF59E0B),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w900),
                     ),
                   ],
                 ),

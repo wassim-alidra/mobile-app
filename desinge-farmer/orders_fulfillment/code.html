@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#dce1ff",
+                        "on-error-container": "#93000a",
+                        "outline": "#6c7b6a",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f8f9fb",
+                        "tertiary-container": "#93a9ff",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#004c1b",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#acf4a4",
+                        "secondary": "#2a6b2c",
+                        "on-surface": "#191c1e",
+                        "on-secondary-fixed": "#002203",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#69ff87",
+                        "primary-container": "#00c853",
+                        "on-primary-fixed": "#002108",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#003ab3",
+                        "on-primary-fixed-variant": "#00531e",
+                        "on-background": "#191c1e",
+                        "on-tertiary-fixed": "#001550",
+                        "surface-container-high": "#e6e8ea",
+                        "outline-variant": "#bbcbb8",
+                        "tertiary-fixed-dim": "#b6c4ff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-container": "#0035a5",
+                        "on-primary": "#ffffff",
+                        "surface": "#f8f9fb",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary-container": "#307231",
+                        "inverse-on-surface": "#eff1f3",
+                        "tertiary": "#004ee8",
+                        "surface-tint": "#006e2a",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "inverse-primary": "#3ce36a",
+                        "secondary-fixed-dim": "#91d78a",
+                        "secondary-container": "#acf4a4",
+                        "on-secondary-fixed-variant": "#0c5216",
+                        "surface-dim": "#d8dadc",
+                        "on-surface-variant": "#3c4a3c",
+                        "primary": "#006e2a",
+                        "background": "#f8f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap": "32px",
+                        "unit": "4px",
+                        "stack-compact": "8px",
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "stack-default": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "data-mono": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-md": ["Geist"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-sm": ["18px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "data-mono": ["14px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Geist', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-20 md:pb-0 md:pt-16">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter h-16 bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-unit">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">agriculture</span>
+</div>
+<h1 class="font-headline-md text-headline-md font-semibold text-primary dark:text-inverse-primary">Farmer Hub</h1>
+</div>
+<div class="flex items-center gap-stack-default">
+<button class="material-symbols-outlined text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-colors p-2 rounded-full">notifications</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtWjY1mrBb2mkSFYK0e7vnLXlhvn1GGArDVJNA6DbpQeeSzvwO51xhFAU2uHcgQyzOjga4MWEB-Oc_uXIyZkl4zmFIGY4tPotDUAFxnI_V2UFf3BFY83UJ5RLNvYhr_vjsNfVd0s2JnEpUtYfvsmmUyx7JoYOzyjpLutQvWWXv9NxbgUZRuIFjueP9lwYg5qAY0M1c0SUfX8_lsqBRb-xxYvfMAzYHhJjVuXjDzZIKRp46gdeiqAOnsY3ooZV31nOqS9FtjsIFomti"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-gutter py-section-gap">
+<!-- Header & Tabs -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-stack-default mb-section-gap">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-unit">Order Lifecycle Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage and track your agricultural trade ledgers in real-time.</p>
+</div>
+<!-- Filter Tabs -->
+<div class="flex bg-surface-container-low p-1 border border-outline-variant rounded-lg">
+<button class="px-6 py-2 font-label-md text-label-md rounded bg-primary-container text-on-primary-container font-bold transition-all">Pending</button>
+<button class="px-6 py-2 font-label-md text-label-md rounded text-on-surface-variant hover:bg-surface-container-highest transition-all">In Progress</button>
+<button class="px-6 py-2 font-label-md text-label-md rounded text-on-surface-variant hover:bg-surface-container-highest transition-all">Delivered</button>
+</div>
+</div>
+<!-- Ledger Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Active Pending Orders (Main Density Column) -->
+<div class="lg:col-span-8 space-y-gutter">
+<!-- Order Card 1: Pending Action -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden transition-all hover:border-primary">
+<div class="bg-surface-container-low px-container-padding py-stack-compact border-b border-outline-variant flex justify-between items-center">
+<span class="font-data-mono text-data-mono text-on-surface-variant uppercase tracking-wider">Order ID: #AGR-88291-X</span>
+<span class="bg-primary-fixed-dim text-on-primary-fixed-variant px-2 py-0.5 rounded font-label-md text-label-md">NEW REQUEST</span>
+</div>
+<div class="p-container-padding grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="flex gap-stack-default md:col-span-2">
+<div class="w-20 h-20 bg-surface-container rounded border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close-up macro photography of fresh organic organic heirloom tomatoes in a rustic wooden crate. The lighting is crisp and natural, emphasizing the vibrant red and orange colors of the produce against a neutral, minimal agricultural background. The style is professional and documentary-like for a digital ledger." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiTmVaGFTET0IwVaK_g_hmPbTFQZEK6AmwdDDheKIhFHfaFv9dVmpnt3ybOpt2qvY2tsCRHd4R4gF6NOS1CV1A6KXapdqOJJwRQZrSjvVMk0SgrNQahk-3bfwg4ndbm6aZ6mcle9RAMJM8yX63w2tWl9qS2YF_PfRuXPjeCaymvwpK1aesMPNfOqfiVaK4pPkAi51c-v3ded4aDd8L3cDklOlcsApUssajJXX4ucnAYnyLsDF_7vUuYJ5bfN8O-U6KLun5wLxm_vAB"/>
+</div>
+<div class="flex flex-col justify-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Organic Heirloom Tomatoes</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Quantity: <span class="font-bold text-on-surface">450 KG</span></p>
+<div class="flex items-center gap-unit text-on-surface-variant mt-unit">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="font-label-md text-label-md">Central Distribution Hub, Sacramento</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-between items-end border-l border-outline-variant pl-gutter hidden md:flex">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase">Order Timestamp</p>
+<p class="font-data-mono text-data-mono text-on-surface">Oct 24, 2023 | 14:22 GMT</p>
+</div>
+<div class="text-right">
+<p class="font-headline-sm text-headline-sm text-primary font-bold">$1,240.00</p>
+</div>
+</div>
+</div>
+<div class="p-gutter border-t border-outline-variant bg-surface-container-lowest flex flex-wrap gap-stack-default justify-end">
+<button class="px-8 py-2 font-label-md text-label-md border border-error text-error hover:bg-error-container/20 transition-colors rounded">REJECT ORDER</button>
+<button class="px-8 py-2 font-label-md text-label-md bg-primary-container text-on-primary-container font-bold hover:opacity-90 transition-opacity rounded">ACCEPT ORDER</button>
+</div>
+</div>
+<!-- Order Card 2: In Progress Traceability -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden transition-all">
+<div class="bg-surface-container-low px-container-padding py-stack-compact border-b border-outline-variant flex justify-between items-center">
+<span class="font-data-mono text-data-mono text-on-surface-variant uppercase tracking-wider">Order ID: #AGR-77104-Y</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-label-md text-label-md">IN TRANSIT</span>
+</div>
+<div class="p-container-padding">
+<div class="flex flex-col md:flex-row gap-gutter mb-gutter">
+<div class="w-20 h-20 bg-surface-container rounded border border-outline-variant flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A bulk sack of golden high-quality wheat grain sitting on a industrial floor. The image has a professional, clean, and corporate aesthetic with high-key lighting that emphasizes the texture of the grain. The color palette is neutral with soft greys and rich golden ambers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhWbsy7mrSs5VBv5e3HbcIhF_qrbI-9tq2qRrZXPNxtRQNdvdxIszCV-a8c7WHdgFDUiRgIWED54G-wDtRFKFBskkojBA1ZeINXDZFIt7BKQ_Z-YcFPuC8yhZ-GjR81g6k4EUE-TVan-ZKOoKmdoCCRY1mZMdtSnL2FpbbgarjluA7EwY3_iBmIxTlPoMgsNy6-ikvcW2JVs8ybVmGXzKzN2GgiIpX6u1BUK7zBAwubLsq3fsn0S7uaygU8gshOOXnmBzQLgVFH_8e"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Premium Hard Red Winter Wheat</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Quantity: <span class="font-bold text-on-surface">2,000 KG (Bulk)</span></p>
+<div class="flex items-center gap-unit text-on-surface-variant mt-unit">
+<span class="material-symbols-outlined text-[16px]">local_shipping</span>
+<span class="font-label-md text-label-md">Transporter: AGRO-LOGISTICS SPRINT #4421</span>
+</div>
+</div>
+<div class="text-right flex flex-col justify-center">
+<p class="font-headline-sm text-headline-sm text-on-surface font-bold">$4,800.00</p>
+<p class="font-label-md text-label-md text-on-surface-variant">Settlement Pending</p>
+</div>
+</div>
+<!-- Status Tracking Indicator -->
+<div class="pt-stack-default border-t border-outline-variant">
+<div class="relative flex items-center justify-between mt-4">
+<!-- Progress Line Background -->
+<div class="absolute h-[2px] w-full bg-surface-container-highest top-1/2 -translate-y-1/2 z-0"></div>
+<!-- Active Progress Line -->
+<div class="absolute h-[2px] w-2/3 bg-primary top-1/2 -translate-y-1/2 z-0"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="absolute -top-8 font-label-md text-label-md whitespace-nowrap text-on-surface">Order Accepted</span>
+<span class="mt-2 font-label-md text-[10px] text-on-surface-variant">Oct 23, 09:00</span>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+</div>
+<span class="absolute -top-8 font-label-md text-label-md whitespace-nowrap text-on-surface">Transporter Assigned</span>
+<span class="mt-2 font-label-md text-[10px] text-on-surface-variant">Oct 24, 11:30</span>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-outline-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+</div>
+<span class="absolute -top-8 font-label-md text-label-md whitespace-nowrap text-on-surface-variant">Delivered</span>
+<span class="mt-2 font-label-md text-[10px] text-on-surface-variant">Estimated: Oct 26</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Strategy & Summary -->
+<div class="lg:col-span-4 space-y-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-container-padding">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-stack-default flex items-center gap-unit">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                        Ledger Overview
+                    </h3>
+<div class="space-y-stack-default">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant">
+<span class="font-body-md text-body-md text-on-surface-variant">Total Pending Volume</span>
+<span class="font-data-mono text-data-mono font-bold">12.4 Tons</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant">
+<span class="font-body-md text-body-md text-on-surface-variant">In-Transit Value</span>
+<span class="font-data-mono text-data-mono font-bold">$42,910.00</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="font-body-md text-body-md text-on-surface-variant">Awaiting Transporter</span>
+<span class="font-data-mono text-data-mono font-bold">8 Orders</span>
+</div>
+</div>
+<button class="w-full mt-gutter py-3 bg-secondary text-on-secondary font-label-md text-label-md rounded uppercase tracking-widest hover:opacity-90 transition-opacity">
+                        Generate Daily Report
+                    </button>
+</div>
+<div class="bg-primary-container/10 border border-primary-container/30 rounded-lg p-container-padding">
+<h3 class="font-label-md text-label-md text-primary font-bold uppercase mb-stack-compact">Logistics Insight</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Average fulfillment time has increased by <span class="text-error font-bold">12%</span> this week due to regional storm conditions in the Sacramento valley. Consider prioritizing orders with longer shelf-life.</p>
+</div>
+<!-- Recent Activity Feed (Ledger Style) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-surface-container-high px-gutter py-2 border-b border-outline-variant">
+<span class="font-label-md text-label-md font-bold text-on-surface uppercase">Activity Log</span>
+</div>
+<div class="divide-y divide-outline-variant">
+<div class="p-stack-default flex gap-stack-compact">
+<div class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Order #AGR-221 Accepted</p>
+<p class="font-label-md text-[10px] text-on-surface-variant">2 mins ago</p>
+</div>
+</div>
+<div class="p-stack-default flex gap-stack-compact">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary mt-1.5"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Logistics Hub Updated</p>
+<p class="font-label-md text-[10px] text-on-surface-variant">14 mins ago</p>
+</div>
+</div>
+<div class="p-stack-default flex gap-stack-compact">
+<div class="w-1.5 h-1.5 rounded-full bg-error mt-1.5"></div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Payment Failed #X990</p>
+<p class="font-label-md text-[10px] text-on-surface-variant">1 hour ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center bg-surface dark:bg-inverse-surface py-stack-compact px-gutter border-t border-outline-variant dark:border-outline">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed-dim rounded-lg px-3 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-md text-label-md">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<!-- Desktop Floating Action Button (FAB) - Suppression logic: rendered only on high-level screens -->
+<button class="hidden md:flex fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-xl shadow-lg items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined">add</span>
+<span class="absolute right-full mr-4 bg-on-surface text-surface text-[12px] font-bold px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Create New Order</span>
+</button>
+</body></html>

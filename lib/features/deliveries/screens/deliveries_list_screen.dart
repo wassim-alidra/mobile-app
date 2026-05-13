@@ -36,123 +36,119 @@ class _DeliveriesListScreenState extends State<DeliveriesListScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => context.pop(),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppTheme.bgSurface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: AppTheme.textMuted.withOpacity(0.2)),
-                        ),
-                        child: const Icon(Icons.arrow_back_ios_new_rounded,
-                            color: AppTheme.textPrimary, size: 18),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.borderLight),
                       ),
+                      child: const Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppTheme.textDark, size: 18),
                     ),
-                    const SizedBox(width: 14),
-                    const Text(
-                      'Market & Deliveries',
-                      style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  ),
+                  const SizedBox(width: 14),
+                  const Text(
+                    'Market & Deliveries',
+                    style: TextStyle(
+                      color: AppTheme.textDark,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
                     ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Tab Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppTheme.borderLight),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    color: AppTheme.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: AppTheme.textMutedLight,
+                  labelStyle: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w700),
+                  dividerColor: Colors.transparent,
+                  padding: const EdgeInsets.all(4),
+                  tabs: const [
+                    Tab(text: 'Available'),
+                    Tab(text: 'Active'),
+                    Tab(text: 'Completed'),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+            ),
+            const SizedBox(height: 16),
 
-              // Tab Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.bgCard,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                        color: AppTheme.textMuted.withOpacity(0.15)),
-                  ),
-                  child: TabBar(
-                    controller: _tabController,
-                    indicator: BoxDecoration(
-                      gradient: AppTheme.primaryGradient,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: AppTheme.textSecondary,
-                    labelStyle: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w700),
-                    dividerColor: Colors.transparent,
-                    padding: const EdgeInsets.all(4),
-                    tabs: const [
-                      Tab(text: 'Available'),
-                      Tab(text: 'Active'),
-                      Tab(text: 'Completed'),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Tab content
-              Expanded(
-                child: Consumer<DeliveryProvider>(
-                  builder: (context, provider, _) {
-                    if (provider.state == DeliveryLoadState.loading &&
-                        provider.deliveries.isEmpty && provider.availableRequests.isEmpty) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                            color: AppTheme.primary),
-                      );
-                    }
-
-                    if (provider.state == DeliveryLoadState.error && provider.deliveries.isEmpty) {
-                      return _ErrorView(
-                        message: provider.errorMessage ?? 'Failed to load',
-                        onRetry: () {
-                          provider.fetchDeliveries();
-                          provider.fetchAvailableRequests();
-                        },
-                      );
-                    }
-
-                    return TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _AvailableRequestsList(
-                          requests: provider.availableRequests,
-                          onRefresh: () => provider.fetchAvailableRequests(),
-                        ),
-                        _DeliveryList(
-                          deliveries: provider.activeDeliveries,
-                          emptyMessage: 'No active deliveries',
-                          onRefresh: () => provider.fetchDeliveries(),
-                        ),
-                        _DeliveryList(
-                          deliveries: provider.completedDeliveries,
-                          emptyMessage: 'No completed deliveries yet',
-                          onRefresh: () => provider.fetchDeliveries(),
-                        ),
-                      ],
+            // Tab content
+            Expanded(
+              child: Consumer<DeliveryProvider>(
+                builder: (context, provider, _) {
+                  if (provider.state == DeliveryLoadState.loading &&
+                      provider.deliveries.isEmpty && provider.availableRequests.isEmpty) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                          color: AppTheme.primary),
                     );
-                  },
-                ),
+                  }
+
+                  if (provider.state == DeliveryLoadState.error && provider.deliveries.isEmpty) {
+                    return _ErrorView(
+                      message: provider.errorMessage ?? 'Failed to load',
+                      onRetry: () {
+                        provider.fetchDeliveries();
+                        provider.fetchAvailableRequests();
+                      },
+                    );
+                  }
+
+                  return TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _AvailableRequestsList(
+                        requests: provider.availableRequests,
+                        onRefresh: () => provider.fetchAvailableRequests(),
+                      ),
+                      _DeliveryList(
+                        deliveries: provider.activeDeliveries,
+                        emptyMessage: 'No active deliveries',
+                        onRefresh: () => provider.fetchDeliveries(),
+                      ),
+                      _DeliveryList(
+                        deliveries: provider.completedDeliveries,
+                        emptyMessage: 'No completed deliveries yet',
+                        onRefresh: () => provider.fetchDeliveries(),
+                      ),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -170,17 +166,16 @@ class _AvailableRequestsList extends StatelessWidget {
     if (requests.isEmpty) {
       return RefreshIndicator(
         color: AppTheme.primary,
-        backgroundColor: AppTheme.bgCard,
         onRefresh: onRefresh,
         child: ListView(
           children: [
             const SizedBox(height: 80),
-            Icon(Icons.request_page_outlined, color: AppTheme.textMuted, size: 56),
+            const Icon(Icons.request_page_outlined, color: AppTheme.textMutedLight, size: 56),
             const SizedBox(height: 16),
             const Text(
               'No delivery requests available\nin the market right now.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.textMuted, fontSize: 15),
+              style: TextStyle(color: AppTheme.textMutedLight, fontSize: 15),
             ),
           ],
         ),
@@ -189,7 +184,6 @@ class _AvailableRequestsList extends StatelessWidget {
 
     return RefreshIndicator(
       color: AppTheme.primary,
-      backgroundColor: AppTheme.bgCard,
       onRefresh: onRefresh,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -219,19 +213,18 @@ class _DeliveryList extends StatelessWidget {
     if (deliveries.isEmpty) {
       return RefreshIndicator(
         color: AppTheme.primary,
-        backgroundColor: AppTheme.bgCard,
         onRefresh: onRefresh,
         child: ListView(
           children: [
             const SizedBox(height: 80),
-            Icon(Icons.local_shipping_outlined,
-                color: AppTheme.textMuted, size: 56),
+            const Icon(Icons.local_shipping_outlined,
+                color: AppTheme.textMutedLight, size: 56),
             const SizedBox(height: 16),
             Text(
               emptyMessage,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  color: AppTheme.textMuted, fontSize: 15),
+                  color: AppTheme.textMutedLight, fontSize: 15),
             ),
           ],
         ),
@@ -240,7 +233,6 @@ class _DeliveryList extends StatelessWidget {
 
     return RefreshIndicator(
       color: AppTheme.primary,
-      backgroundColor: AppTheme.bgCard,
       onRefresh: onRefresh,
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -271,9 +263,9 @@ class _DeliveryListTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: AppTheme.cardGradient,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: statusColor.withOpacity(0.25)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppTheme.borderLight),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,7 +275,7 @@ class _DeliveryListTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.15),
+                    color: statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(AppTheme.getStatusIcon(delivery.status),
@@ -297,16 +289,16 @@ class _DeliveryListTile extends StatelessWidget {
                       Text(
                         product?.name ?? 'Order #${delivery.order.id}',
                         style: const TextStyle(
-                          color: AppTheme.textPrimary,
+                          color: AppTheme.textDark,
                           fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Order #${delivery.order.id}',
+                        'ID: #TX-${delivery.id}',
                         style: const TextStyle(
-                          color: AppTheme.textSecondary,
+                          color: AppTheme.textMutedLight,
                           fontSize: 12,
                         ),
                       ),
@@ -317,30 +309,31 @@ class _DeliveryListTile extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20),
+                    color: AppTheme.primary,
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    statusLabel,
-                    style: TextStyle(
-                      color: statusColor,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                    statusLabel.toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 14),
-            const Divider(height: 1, color: Color(0xFF2A3545)),
+            const Divider(height: 1, color: AppTheme.borderLight),
             const SizedBox(height: 14),
             Row(
               children: [
                 _InfoChip(
-                  icon: Icons.person_outline_rounded,
-                  label: buyer?.username ?? '—',
+                  icon: Icons.location_on_outlined,
+                  label: buyer?.wilaya ?? 'Central Hub',
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 _InfoChip(
                   icon: Icons.scale_rounded,
                   label: '${delivery.order.quantity.toStringAsFixed(1)} kg',
@@ -349,8 +342,8 @@ class _DeliveryListTile extends StatelessWidget {
                 Text(
                   '${delivery.deliveryFee.toStringAsFixed(0)} DA',
                   style: const TextStyle(
-                    color: AppTheme.primary,
-                    fontSize: 15,
+                    color: AppTheme.textDark,
+                    fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -374,12 +367,12 @@ class _InfoChip extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: AppTheme.textMuted, size: 13),
+        Icon(icon, color: AppTheme.textMutedLight, size: 14),
         const SizedBox(width: 4),
         Text(
           label,
           style: const TextStyle(
-              color: AppTheme.textSecondary, fontSize: 12),
+              color: AppTheme.textMutedLight, fontSize: 12, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -399,11 +392,11 @@ class _ErrorView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.wifi_off_rounded,
-              color: AppTheme.textMuted, size: 48),
+              color: AppTheme.textMutedLight, size: 48),
           const SizedBox(height: 16),
           Text(message,
               style: const TextStyle(
-                  color: AppTheme.textSecondary, fontSize: 14),
+                  color: AppTheme.textMutedLight, fontSize: 14),
               textAlign: TextAlign.center),
           const SizedBox(height: 24),
           ElevatedButton.icon(

@@ -101,26 +101,24 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: _loading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                            color: AppTheme.primary))
-                    : _delivery == null
-                        ? const Center(
-                            child: Text('Delivery not found',
-                                style: TextStyle(
-                                    color: AppTheme.textSecondary)))
-                        : _buildContent(),
-              ),
-            ],
-          ),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: _loading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                          color: AppTheme.primary))
+                  : _delivery == null
+                      ? const Center(
+                          child: Text('Delivery not found',
+                              style: TextStyle(
+                                  color: AppTheme.textMutedLight)))
+                      : _buildContent(),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: _delivery != null && !_loading
@@ -140,13 +138,12 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppTheme.bgSurface,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                    color: AppTheme.textMuted.withOpacity(0.2)),
+                border: Border.all(color: AppTheme.borderLight),
               ),
               child: const Icon(Icons.arrow_back_ios_new_rounded,
-                  color: AppTheme.textPrimary, size: 18),
+                  color: AppTheme.textDark, size: 18),
             ),
           ),
           const SizedBox(width: 14),
@@ -156,16 +153,16 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
               const Text(
                 'Delivery Detail',
                 style: TextStyle(
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.textDark,
                   fontSize: 20,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
               if (_delivery != null)
                 Text(
-                  'Order #${_delivery!.order.id}',
+                  'ID: #TX-${_delivery!.id}',
                   style: const TextStyle(
-                      color: AppTheme.textSecondary, fontSize: 13),
+                      color: AppTheme.textMutedLight, fontSize: 13, fontWeight: FontWeight.w600),
                 ),
             ],
           ),
@@ -178,7 +175,6 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     final d = _delivery!;
     return RefreshIndicator(
       color: AppTheme.primary,
-      backgroundColor: AppTheme.bgCard,
       onRefresh: _loadDelivery,
       child: ListView(
         padding: const EdgeInsets.all(20),
@@ -204,28 +200,28 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.primary.withOpacity(0.3)),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.map_outlined, color: AppTheme.primary, size: 20),
-              const SizedBox(width: 10),
-              const Expanded(
+              Icon(Icons.map_outlined, color: AppTheme.primary, size: 22),
+              SizedBox(width: 12),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Delivery Route',
                         style: TextStyle(
-                            color: AppTheme.textPrimary,
+                            color: AppTheme.textDark,
                             fontSize: 15,
-                            fontWeight: FontWeight.w700)),
+                            fontWeight: FontWeight.w800)),
                     Text('View pickup and destination locations',
                         style: TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 12)),
+                            color: AppTheme.textMutedLight, fontSize: 12)),
                   ],
                 ),
               ),
@@ -255,8 +251,8 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
               icon: const Icon(Icons.navigation_outlined, size: 18),
               label: const Text('Open Route Map'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary.withOpacity(0.15),
-                foregroundColor: AppTheme.primary,
+                backgroundColor: AppTheme.primary,
+                foregroundColor: Colors.white,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -275,22 +271,16 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.4)),
-        boxShadow: [
-          BoxShadow(
-              color: color.withOpacity(0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 8))
-        ],
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(AppTheme.getStatusIcon(d.status),
@@ -302,27 +292,28 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  AppTheme.getStatusLabel(d.status),
+                  AppTheme.getStatusLabel(d.status).toUpperCase(),
                   style: TextStyle(
                     color: color,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.5,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Delivery #${d.id}',
+                  'Order #${d.order.id}',
                   style: const TextStyle(
-                      color: AppTheme.textSecondary, fontSize: 13),
+                      color: AppTheme.textMutedLight, fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
           ),
           Text(
             '${d.deliveryFee.toStringAsFixed(0)} DA',
-            style: TextStyle(
-              color: AppTheme.primary,
-              fontSize: 18,
+            style: const TextStyle(
+              color: AppTheme.textDark,
+              fontSize: 20,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -337,19 +328,19 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.textMuted.withOpacity(0.15)),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Delivery Progress',
+            'Shipment Progress',
             style: TextStyle(
-              color: AppTheme.textPrimary,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
+              color: AppTheme.textDark,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: 20),
@@ -359,7 +350,7 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
             final isCurrent = i == currentIdx;
             final color = isDone
                 ? AppTheme.getStatusColor(status)
-                : AppTheme.textMuted;
+                : AppTheme.textMutedLight;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,23 +361,17 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: isDone
-                            ? color.withOpacity(0.2)
-                            : AppTheme.bgSurface,
+                        color: isCurrent ? AppTheme.primary : (isDone ? const Color(0xFF065F46) : Colors.white),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: isDone ? color : AppTheme.textMuted,
-                          width: isCurrent ? 2.5 : 1.5,
+                          color: isCurrent ? AppTheme.primary : (isDone ? const Color(0xFF065F46) : const Color(0xFFCBD5E1)),
+                          width: 2,
                         ),
                       ),
-                      child: Icon(
-                        isDone
-                            ? (i < currentIdx
-                                ? Icons.check_rounded
-                                : AppTheme.getStatusIcon(status))
-                            : AppTheme.getStatusIcon(status),
-                        color: isDone ? color : AppTheme.textMuted,
-                        size: 16,
+                      child: Center(
+                        child: isDone && !isCurrent
+                          ? const Icon(Icons.check, color: Colors.white, size: 16)
+                          : Icon(AppTheme.getStatusIcon(status), color: isCurrent ? Colors.white : AppTheme.textMutedLight, size: 16),
                       ),
                     ),
                     if (i < _pipeline.length - 1)
@@ -394,8 +379,8 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                         width: 2,
                         height: 28,
                         color: i < currentIdx
-                            ? AppTheme.primary.withOpacity(0.5)
-                            : AppTheme.textMuted.withOpacity(0.2),
+                            ? const Color(0xFF065F46)
+                            : const Color(0xFFE2E8F0),
                       ),
                   ],
                 ),
@@ -405,10 +390,10 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                   child: Text(
                     AppTheme.getStatusLabel(status),
                     style: TextStyle(
-                      color: isDone ? AppTheme.textPrimary : AppTheme.textMuted,
-                      fontSize: 13,
+                      color: isDone ? AppTheme.textDark : AppTheme.textMutedLight,
+                      fontSize: 14,
                       fontWeight:
-                          isCurrent ? FontWeight.w700 : FontWeight.w400,
+                          isDone ? FontWeight.w800 : FontWeight.w500,
                     ),
                   ),
                 ),
@@ -440,14 +425,14 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     if (p == null) return const SizedBox.shrink();
 
     return _InfoCard(
-      title: 'Product',
+      title: 'Cargo Details',
       icon: Icons.inventory_2_rounded,
       children: [
-        _InfoRow('Name', p.name),
-        _InfoRow('Price/kg', '${p.pricePerKg.toStringAsFixed(2)} DA'),
+        _InfoRow('Product Name', p.name),
+        _InfoRow('Unit Price', '${p.pricePerKg.toStringAsFixed(2)} DA'),
         if (p.farmerUsername != null)
-          _InfoRow('Farmer', p.farmerUsername!),
-        if (p.farmerWilaya != null) _InfoRow('Wilaya', p.farmerWilaya!),
+          _InfoRow('Supplier', p.farmerUsername!),
+        if (p.farmerWilaya != null) _InfoRow('Origin', p.farmerWilaya!),
       ],
     );
   }
@@ -455,11 +440,11 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
   Widget _buildPartiesCard(DeliveryModel d) {
     final buyer = d.order.buyer;
     return _InfoCard(
-      title: 'Buyer',
+      title: 'Recipient Info',
       icon: Icons.person_outline_rounded,
       children: [
-        _InfoRow('Username', buyer?.username ?? '—'),
-        if (buyer?.wilaya != null) _InfoRow('Wilaya', buyer!.wilaya!),
+        _InfoRow('Buyer Name', buyer?.username ?? '—'),
+        if (buyer?.wilaya != null) _InfoRow('Destination', buyer!.wilaya!),
       ],
     );
   }
@@ -470,20 +455,23 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     if (next == null) {
       return Container(
         padding: const EdgeInsets.all(20),
-        color: AppTheme.bgCard,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: AppTheme.borderLight)),
+        ),
         child: SafeArea(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.check_circle_rounded,
-                  color: AppTheme.statusDelivered, size: 22),
+                  color: AppTheme.primary, size: 22),
               const SizedBox(width: 10),
               const Text(
-                'Delivery Completed!',
+                'Logistics Successfully Completed',
                 style: TextStyle(
-                  color: AppTheme.statusDelivered,
+                  color: AppTheme.primary,
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
@@ -493,68 +481,38 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
     }
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-      decoration: BoxDecoration(
-        color: AppTheme.bgCard,
-        border: Border(
-          top: BorderSide(color: AppTheme.textMuted.withOpacity(0.15)),
-        ),
+      padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: AppTheme.borderLight)),
       ),
       child: SafeArea(
         child: SizedBox(
           width: double.infinity,
-          height: 54,
+          height: 56,
           child: _updating
-              ? Container(
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.primaryGradient,
-                    borderRadius: BorderRadius.circular(14),
+              ? ElevatedButton(
+                  onPressed: null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                    disabledBackgroundColor: AppTheme.primary.withOpacity(0.7),
                   ),
-                  child: const Center(
-                    child: SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(
-                          color: Colors.white, strokeWidth: 2.5),
-                    ),
+                  child: const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                        color: Colors.white, strokeWidth: 2.5),
                   ),
                 )
-              : Container(
-                  decoration: BoxDecoration(
-                    gradient: AppTheme.primaryGradient,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primary.withOpacity(0.3),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: _advanceStatus,
-                      borderRadius: BorderRadius.circular(14),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(AppTheme.getStatusIcon(next),
-                                color: Colors.white, size: 20),
-                            const SizedBox(width: 10),
-                            Text(
-                              'Mark as ${AppTheme.getStatusLabel(next)}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+              : ElevatedButton.icon(
+                  onPressed: _advanceStatus,
+                  icon: Icon(AppTheme.getStatusIcon(next), size: 20),
+                  label: Text('Mark as ${AppTheme.getStatusLabel(next)}'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
                 ),
         ),
@@ -578,24 +536,23 @@ class _InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border:
-            Border.all(color: AppTheme.textMuted.withOpacity(0.15)),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: AppTheme.primary, size: 18),
-              const SizedBox(width: 8),
+              Icon(icon, color: AppTheme.primary, size: 20),
+              const SizedBox(width: 10),
               Text(
                 title,
                 style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textDark,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
@@ -617,21 +574,21 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             label,
             style: const TextStyle(
-                color: AppTheme.textSecondary, fontSize: 13),
+                color: AppTheme.textMutedLight, fontSize: 13, fontWeight: FontWeight.w500),
           ),
           Text(
             value,
             style: const TextStyle(
-              color: AppTheme.textPrimary,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+              color: AppTheme.textDark,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],

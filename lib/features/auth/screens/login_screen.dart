@@ -106,45 +106,41 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.bgGradient,
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                const SizedBox(height: 60),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const SizedBox(height: 60),
 
-                // ─── Logo / Brand Hero ───────────────────────────
-                FadeTransition(
+              // ─── Logo / Brand Hero ───────────────────────────
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: _buildBrandHero(),
+              ),
+
+              const SizedBox(height: 48),
+
+              // ─── Login Form Card ─────────────────────────────
+              SlideTransition(
+                position: _slideAnimation,
+                child: FadeTransition(
                   opacity: _fadeAnimation,
-                  child: _buildBrandHero(),
+                  child: _buildLoginCard(),
                 ),
+              ),
 
-                const SizedBox(height: 48),
+              const SizedBox(height: 32),
 
-                // ─── Login Form Card ─────────────────────────────
-                SlideTransition(
-                  position: _slideAnimation,
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: _buildLoginCard(),
-                  ),
-                ),
+              // ─── Footer ──────────────────────────────────────
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: _buildFooter(),
+              ),
 
-                const SizedBox(height: 32),
-
-                // ─── Footer ──────────────────────────────────────
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: _buildFooter(),
-                ),
-
-                const SizedBox(height: 40),
-              ],
-            ),
+              const SizedBox(height: 40),
+            ],
           ),
         ),
       ),
@@ -156,72 +152,67 @@ class _LoginScreenState extends State<LoginScreen>
       children: [
         // Logo container with glow
         Container(
-          width: 90,
-          height: 90,
+          width: 100,
+          height: 100,
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
-            borderRadius: BorderRadius.circular(26),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: AppTheme.borderLight),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primary.withOpacity(0.4),
+                color: Colors.black.withOpacity(0.05),
                 blurRadius: 30,
-                spreadRadius: 5,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
-          child: const Icon(
-            Icons.local_shipping_rounded,
-            color: Colors.white,
-            size: 48,
+          child: Image.asset(
+            'assets/images/logo.PNG',
+            fit: BoxFit.contain,
           ),
         ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
 
         // App name
-        ShaderMask(
-          shaderCallback: (bounds) =>
-              AppTheme.primaryGradient.createShader(bounds),
-          child: const Text(
-            'AgriGov',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 36,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -0.5,
-            ),
+        const Text(
+          'AgriGov',
+          style: TextStyle(
+            color: AppTheme.textDark,
+            fontSize: 40,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -1,
           ),
         ),
 
-        const SizedBox(height: 6),
+        const SizedBox(height: 4),
 
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
           decoration: BoxDecoration(
-            color: AppTheme.primary.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppTheme.primary.withOpacity(0.3),
-            ),
+            color: AppTheme.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: const Text(
-            'TRANSPORTER PORTAL',
+            'INSTITUTIONAL LOGISTICS',
             style: TextStyle(
-              color: AppTheme.primaryLight,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
+              color: AppTheme.primary,
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
               letterSpacing: 2,
             ),
           ),
         ),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
 
-        Text(
-          'Manage your deliveries efficiently',
+        const Text(
+          'Strategic Supply Chain Management System',
           style: TextStyle(
-            color: AppTheme.textSecondary,
+            color: AppTheme.textMutedLight,
             fontSize: 14,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -230,18 +221,16 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildLoginCard() {
     return Container(
-      padding: const EdgeInsets.all(28),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: AppTheme.textMuted.withOpacity(0.15),
-        ),
+        border: Border.all(color: AppTheme.borderLight),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 40,
-            offset: const Offset(0, 20),
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
           ),
         ],
       ),
@@ -250,61 +239,75 @@ class _LoginScreenState extends State<LoginScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Welcome back',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Sign in to your transporter account',
+            const Text(
+              'Secure Login',
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: AppTheme.textDark,
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Enter your official credentials to proceed',
+              style: TextStyle(
+                color: AppTheme.textMutedLight,
                 fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
             ),
 
-            const SizedBox(height: 28),
+            const SizedBox(height: 32),
 
             // Username field
-            _buildLabel('Username'),
-            const SizedBox(height: 8),
+            _buildLabel('OPERATOR ID / USERNAME'),
+            const SizedBox(height: 10),
             TextFormField(
               controller: _usernameController,
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: const TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
-                hintText: 'Enter your username',
+                filled: true,
+                fillColor: AppTheme.bgLight.withOpacity(0.5),
+                hintText: 'e.g. operator_24',
                 prefixIcon: const Icon(
-                  Icons.person_outline_rounded,
-                  color: AppTheme.textSecondary,
+                  Icons.badge_outlined,
+                  color: AppTheme.textMutedLight,
                   size: 20,
                 ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
               ),
               validator: (v) {
                 if (v == null || v.trim().isEmpty) {
-                  return 'Username is required';
+                  return 'Credentials required';
                 }
                 return null;
               },
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
             // Password field
-            _buildLabel('Password'),
-            const SizedBox(height: 8),
+            _buildLabel('ACCESS KEY / PASSWORD'),
+            const SizedBox(height: 10),
             TextFormField(
               controller: _passwordController,
               obscureText: _obscurePassword,
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _handleLogin(),
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: const TextStyle(color: AppTheme.textDark, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
-                hintText: 'Enter your password',
+                filled: true,
+                fillColor: AppTheme.bgLight.withOpacity(0.5),
+                hintText: '••••••••',
                 prefixIcon: const Icon(
-                  Icons.lock_outline_rounded,
-                  color: AppTheme.textSecondary,
+                  Icons.key_outlined,
+                  color: AppTheme.textMutedLight,
                   size: 20,
                 ),
                 suffixIcon: IconButton(
@@ -312,80 +315,60 @@ class _LoginScreenState extends State<LoginScreen>
                     _obscurePassword
                         ? Icons.visibility_off_outlined
                         : Icons.visibility_outlined,
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.textMutedLight,
                     size: 20,
                   ),
                   onPressed: () {
                     setState(() => _obscurePassword = !_obscurePassword);
                   },
                 ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 16),
               ),
               validator: (v) {
-                if (v == null || v.isEmpty) return 'Password is required';
-                if (v.length < 3) return 'Password too short';
+                if (v == null || v.isEmpty) return 'Access key required';
                 return null;
               },
             ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 40),
 
             // Login Button
             SizedBox(
               width: double.infinity,
-              height: 54,
+              height: 56,
               child: _isLoading
-                  ? Container(
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
-                        borderRadius: BorderRadius.circular(14),
+                  ? ElevatedButton(
+                      onPressed: null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        disabledBackgroundColor: AppTheme.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Center(
-                        child: SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
+                      child: const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.5,
                         ),
                       ),
                     )
-                  : Container(
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.primaryGradient,
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primary.withOpacity(0.35),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
+                  : ElevatedButton.icon(
+                      onPressed: _handleLogin,
+                      icon: const Icon(Icons.login_rounded, size: 20),
+                      label: const Text(
+                        'Authenticate',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                       ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: _handleLogin,
-                          borderRadius: BorderRadius.circular(14),
-                          child: const Center(
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.login_rounded,
-                                    color: Colors.white, size: 20),
-                                SizedBox(width: 10),
-                                Text(
-                                  'Sign In',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
                     ),
             ),
@@ -399,9 +382,10 @@ class _LoginScreenState extends State<LoginScreen>
     return Text(
       text,
       style: const TextStyle(
-        color: AppTheme.textSecondary,
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
+        color: AppTheme.textMutedLight,
+        fontSize: 11,
+        fontWeight: FontWeight.w800,
+        letterSpacing: 0.5,
       ),
     );
   }
@@ -412,39 +396,25 @@ class _LoginScreenState extends State<LoginScreen>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 4,
-              height: 4,
-              decoration: const BoxDecoration(
-                color: AppTheme.primary,
-                shape: BoxShape.circle,
-              ),
-            ),
+            Icon(Icons.verified_user_outlined, color: AppTheme.primary.withOpacity(0.5), size: 14),
             const SizedBox(width: 8),
             Text(
-              'Secure • Encrypted • Real-time',
+              'End-to-End Encrypted Authority Portal',
               style: TextStyle(
-                color: AppTheme.textMuted,
+                color: AppTheme.textMutedLight,
                 fontSize: 12,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              width: 4,
-              height: 4,
-              decoration: const BoxDecoration(
-                color: AppTheme.primary,
-                shape: BoxShape.circle,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         Text(
-          '© 2026 AgriGov Market Platform',
+          '© 2026 AgriGov Sovereign Infrastructure',
           style: TextStyle(
-            color: AppTheme.textMuted,
+            color: AppTheme.textMutedLight.withOpacity(0.5),
             fontSize: 11,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

@@ -33,39 +33,37 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              _buildTabBar(),
-              Expanded(
-                child: Consumer<FarmerProvider>(
-                  builder: (context, provider, _) {
-                    if (provider.loadingOrders) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                            color: AppTheme.primary),
-                      );
-                    }
-                    if (provider.error != null) {
-                      return _buildError(provider.error!, provider);
-                    }
-                    return TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _buildOrdersList(
-                            provider.pendingOrders, provider, pending: true),
-                        _buildOrdersList(provider.acceptedOrders, provider),
-                        _buildOrdersList(provider.completedOrders, provider),
-                      ],
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            _buildTabBar(),
+            Expanded(
+              child: Consumer<FarmerProvider>(
+                builder: (context, provider, _) {
+                  if (provider.loadingOrders) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                          color: AppTheme.primary),
                     );
-                  },
-                ),
+                  }
+                  if (provider.error != null) {
+                    return _buildError(provider.error!, provider);
+                  }
+                  return TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildOrdersList(
+                          provider.pendingOrders, provider, pending: true),
+                      _buildOrdersList(provider.acceptedOrders, provider),
+                      _buildOrdersList(provider.completedOrders, provider),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -82,7 +80,7 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
             const SizedBox(height: 16),
             Text(
               message,
-              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+              style: const TextStyle(color: AppTheme.textDark, fontSize: 14, fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
@@ -93,8 +91,9 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primary,
                 foregroundColor: Colors.white,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ],
@@ -105,34 +104,38 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
+              color: AppTheme.primary.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.receipt_long_rounded,
-                color: AppTheme.primary, size: 22),
+            child: const Icon(Icons.assignment_rounded,
+                color: AppTheme.primary, size: 24),
           ),
           const SizedBox(width: 14),
           const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'My Orders',
+                'Orders Management',
                 style: TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 20,
+                  color: AppTheme.textDark,
+                  fontSize: 22,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
-                'Accept, track and manage sales',
-                style:
-                    TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                'STRATEGIC FULFILLMENT LEDGER',
+                style: TextStyle(
+                  color: AppTheme.textMutedLight,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
+                ),
               ),
             ],
           ),
@@ -143,31 +146,31 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
 
   Widget _buildTabBar() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
       child: Container(
-        height: 44,
+        height: 48,
         decoration: BoxDecoration(
-          color: AppTheme.bgCard,
-          borderRadius: BorderRadius.circular(12),
-          border:
-              Border.all(color: AppTheme.textMuted.withOpacity(0.2)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppTheme.borderLight),
         ),
         child: TabBar(
           controller: _tabController,
           dividerColor: Colors.transparent,
           indicator: BoxDecoration(
-            gradient: AppTheme.primaryGradient,
-            borderRadius: BorderRadius.circular(10),
+            color: AppTheme.primary,
+            borderRadius: BorderRadius.circular(6),
           ),
+          indicatorPadding: const EdgeInsets.all(4),
           indicatorSize: TabBarIndicatorSize.tab,
           labelColor: Colors.white,
-          unselectedLabelColor: AppTheme.textSecondary,
+          unselectedLabelColor: AppTheme.textMutedLight,
           labelStyle: const TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w700),
+              fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 0.5),
           tabs: const [
-            Tab(text: 'Pending'),
-            Tab(text: 'Accepted'),
-            Tab(text: 'Completed'),
+            Tab(text: 'PENDING'),
+            Tab(text: 'ACCEPTED'),
+            Tab(text: 'HISTORY'),
           ],
         ),
       ),
@@ -181,12 +184,11 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
   }) {
     return RefreshIndicator(
       color: AppTheme.primary,
-      backgroundColor: AppTheme.bgCard,
       onRefresh: provider.fetchOrders,
       child: orders.isEmpty
           ? ListView(
               children: [
-                const SizedBox(height: 80),
+                const SizedBox(height: 100),
                 Center(
                   child: Column(
                     children: [
@@ -194,17 +196,26 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
                         pending
                             ? Icons.hourglass_empty_rounded
                             : Icons.inbox_rounded,
-                        color: AppTheme.textMuted,
-                        size: 56,
+                        color: AppTheme.textMutedLight,
+                        size: 64,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Text(
                         pending
-                            ? 'No pending orders'
-                            : 'No orders here',
+                            ? 'No Pending Strategic Orders'
+                            : 'No Order Records Found',
                         style: const TextStyle(
-                            color: AppTheme.textSecondary,
-                            fontSize: 15),
+                            color: AppTheme.textDark,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Updates will appear in real-time.',
+                        style: TextStyle(
+                            color: AppTheme.textMutedLight,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -212,7 +223,7 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
               ],
             )
           : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
@@ -227,8 +238,8 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBar(
                               content: Text(ok
-                                  ? 'Order #${order.id} accepted!'
-                                  : 'Failed to accept order'),
+                                  ? 'Order #${order.id} approved!'
+                                  : 'Action failed.'),
                               backgroundColor: ok
                                   ? AppTheme.statusDelivered
                                   : AppTheme.statusCancelled,
@@ -244,8 +255,8 @@ class _FarmerOrdersScreenState extends State<FarmerOrdersScreen>
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(SnackBar(
                               content: Text(ok
-                                  ? 'Order #${order.id} rejected'
-                                  : 'Failed to reject'),
+                                  ? 'Order #${order.id} rejected.'
+                                  : 'Action failed.'),
                               backgroundColor:
                                   AppTheme.statusCancelled,
                             ));

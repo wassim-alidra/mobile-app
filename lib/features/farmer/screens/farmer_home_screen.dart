@@ -21,41 +21,38 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Consumer<FarmerProvider>(
-            builder: (context, provider, _) {
-              return RefreshIndicator(
-                color: AppTheme.primary,
-                backgroundColor: AppTheme.bgCard,
-                onRefresh: () async {
-                  await provider.fetchStats();
-                  await provider.fetchOrders();
-                },
-                child: CustomScrollView(
-                  slivers: [
-                    _buildHeader(provider),
-                    if (provider.hasFireAlert)
-                      SliverToBoxAdapter(child: _buildFireAlert(provider)),
-                    if (provider.error != null)
-                      SliverToBoxAdapter(
-                        child: _buildError(provider.error!),
-                      ),
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      sliver: SliverToBoxAdapter(
-                        child: _buildStatsGrid(provider),
-                      ),
-                    ),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Consumer<FarmerProvider>(
+          builder: (context, provider, _) {
+            return RefreshIndicator(
+              color: AppTheme.primary,
+              onRefresh: () async {
+                await provider.fetchStats();
+                await provider.fetchOrders();
+              },
+              child: CustomScrollView(
+                slivers: [
+                  _buildHeader(provider),
+                  if (provider.hasFireAlert)
+                    SliverToBoxAdapter(child: _buildFireAlert(provider)),
+                  if (provider.error != null)
                     SliverToBoxAdapter(
-                        child: _buildPendingOrdersSection(provider)),
-                    const SliverToBoxAdapter(child: SizedBox(height: 100)),
-                  ],
-                ),
-              );
-            },
-          ),
+                      child: _buildError(provider.error!),
+                    ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    sliver: SliverToBoxAdapter(
+                      child: _buildStatsGrid(provider),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                      child: _buildPendingOrdersSection(provider)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -64,24 +61,24 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
   Widget _buildError(String message) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.red.withOpacity(0.3)),
       ),
       child: Row(
         children: [
           const Icon(Icons.error_outline_rounded, color: Colors.red, size: 20),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: Colors.red, fontSize: 13),
+              style: const TextStyle(color: AppTheme.textDark, fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: Colors.red, size: 20),
+            icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary, size: 20),
             onPressed: () {
               final p = context.read<FarmerProvider>();
               p.fetchStats();
@@ -96,18 +93,19 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
   Widget _buildHeader(FarmerProvider provider) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
         child: Row(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: 52,
+              height: 52,
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                gradient: AppTheme.primaryGradient,
-                borderRadius: BorderRadius.circular(14),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.borderLight),
               ),
-              child: const Icon(Icons.agriculture_rounded,
-                  color: Colors.white, size: 26),
+              child: Image.asset('assets/images/logo.PNG', fit: BoxFit.contain),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -115,27 +113,32 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${provider.user?.username ?? 'Farmer'} (${provider.user?.role ?? 'Role'})',
+                    provider.user?.username ?? 'Farmer',
                     style: const TextStyle(
-                      color: AppTheme.textPrimary,
-                      fontSize: 18,
+                      color: AppTheme.textDark,
+                      fontSize: 22,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  Text(
-                    'Manage your farm operations',
+                  const Text(
+                    'INSTITUTIONAL FARMER HUB',
                     style: TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 12),
+                      color: AppTheme.textMutedLight,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ],
               ),
             ),
             if (provider.hasFireAlert)
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.15),
+                  color: Colors.red.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.red.withOpacity(0.2)),
                 ),
                 child: const Icon(Icons.local_fire_department_rounded,
                     color: Colors.red, size: 22),
@@ -148,62 +151,84 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
 
   Widget _buildFireAlert(FarmerProvider provider) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.red.withOpacity(0.5)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppTheme.borderLight),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            children: [
-              Icon(Icons.local_fire_department_rounded,
-                  color: Colors.red, size: 20),
-              SizedBox(width: 8),
-              Text(
-                '🔥 FIRE ALERT — Immediate Action Required',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          ...provider.fireAlerts.map(
-            (alert) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: [
-                  const Icon(Icons.place_rounded,
-                      color: Colors.redAccent, size: 14),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      '${alert.farmName} — Fire detected!',
-                      style: const TextStyle(
-                          color: AppTheme.textPrimary, fontSize: 13),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => provider.resolveFireAlert(alert.id),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
-                    ),
-                    child: const Text('Resolve',
-                        style: TextStyle(fontSize: 12)),
-                  ),
-                ],
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded,
+                            color: Colors.red, size: 18),
+                        SizedBox(width: 8),
+                        Text(
+                          'EMERGENCY ALERT: FIRE DETECTED',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ...provider.fireAlerts.map(
+                      (alert) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Critical detection at ${alert.farmName}',
+                                style: const TextStyle(
+                                    color: AppTheme.textDark, fontSize: 13, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            SizedBox(
+                              height: 32,
+                              child: ElevatedButton(
+                                onPressed: () => provider.resolveFireAlert(alert.id),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red.shade50,
+                                  foregroundColor: Colors.red.shade700,
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                                ),
+                                child: const Text('Resolve',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -211,7 +236,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
   Widget _buildStatsGrid(FarmerProvider provider) {
     if (provider.loadingStats) {
       return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 30),
+        padding: EdgeInsets.symmetric(vertical: 40),
         child: Center(
           child: CircularProgressIndicator(color: AppTheme.primary),
         ),
@@ -221,50 +246,50 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
     final stats = provider.stats;
 
     return Padding(
-      padding: const EdgeInsets.only(top: 20, bottom: 8),
+      padding: const EdgeInsets.only(top: 24, bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Overview',
+            'Operational Overview',
             style: TextStyle(
-              color: AppTheme.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+              color: AppTheme.textDark,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1.2,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 14,
+            childAspectRatio: 1.1,
             children: [
               FarmerStatCard(
-                label: 'My Products',
+                label: 'Market Inventory',
                 value: '${stats?.totalProducts ?? 0}',
                 icon: Icons.inventory_2_rounded,
                 color: AppTheme.primary,
               ),
               FarmerStatCard(
-                label: 'Pending Orders',
+                label: 'Awaiting Action',
                 value: '${stats?.pendingOrders ?? 0}',
-                icon: Icons.hourglass_empty_rounded,
-                color: AppTheme.accent,
+                icon: Icons.assignment_late_rounded,
+                color: const Color(0xFFF59E0B),
               ),
               FarmerStatCard(
-                label: 'Completed',
+                label: 'Fulfillment Rate',
                 value: '${stats?.completedOrders ?? 0}',
-                icon: Icons.check_circle_rounded,
-                color: AppTheme.statusDelivered,
+                icon: Icons.task_alt_rounded,
+                color: const Color(0xFF065F46),
               ),
               FarmerStatCard(
-                label: 'Revenue',
+                label: 'Gross Revenue',
                 value: '${(stats?.totalRevenue ?? 0).toStringAsFixed(0)} DA',
-                icon: Icons.attach_money_rounded,
-                color: AppTheme.secondary,
+                icon: Icons.account_balance_wallet_rounded,
+                color: const Color(0xFF0F172A),
               ),
             ],
           ),
@@ -277,7 +302,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
     final pending = provider.pendingOrders;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -285,42 +310,41 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Pending Orders (${pending.length})',
+                'Strategic Fulfillment (${pending.length})',
                 style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textDark,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           if (provider.loadingOrders)
             const Center(
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.all(30),
                 child: CircularProgressIndicator(color: AppTheme.primary),
               ),
             )
           else if (pending.isEmpty)
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: AppTheme.bgCard,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: AppTheme.textMuted.withOpacity(0.15)),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.borderLight),
               ),
               child: const Center(
                 child: Column(
                   children: [
                     Icon(Icons.inbox_rounded,
-                        color: AppTheme.textMuted, size: 40),
-                    SizedBox(height: 8),
+                        color: AppTheme.textMutedLight, size: 48),
+                    SizedBox(height: 12),
                     Text(
-                      'No pending orders',
+                      'No orders requiring action.',
                       style: TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 14),
+                          color: AppTheme.textMutedLight, fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -338,7 +362,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(ok
                           ? 'Order #${order.id} accepted!'
-                          : 'Failed to accept order'),
+                          : 'Action failed.'),
                       backgroundColor:
                           ok ? AppTheme.statusDelivered : AppTheme.statusCancelled,
                     ));
@@ -350,8 +374,8 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(ok
-                          ? 'Order #${order.id} rejected'
-                          : 'Failed to reject order'),
+                          ? 'Order #${order.id} rejected.'
+                          : 'Action failed.'),
                       backgroundColor: AppTheme.statusCancelled,
                     ));
                   }

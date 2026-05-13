@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../auth/models/user_model.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../deliveries/providers/delivery_provider.dart';
 
@@ -15,261 +17,283 @@ class ProfileScreen extends StatelessWidget {
     final user = auth.user;
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => context.pop(),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AppTheme.bgSurface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: AppTheme.textMuted.withOpacity(0.2)),
-                        ),
-                        child: const Icon(Icons.arrow_back_ios_new_rounded,
-                            color: AppTheme.textPrimary, size: 18),
+      backgroundColor: AppTheme.bgLight,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.borderLight),
                       ),
+                      child: const Icon(Icons.arrow_back_ios_new_rounded,
+                          color: AppTheme.textDark, size: 18),
                     ),
-                    const SizedBox(width: 14),
-                    const Text(
-                      'My Profile',
-                      style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  ),
+                  const SizedBox(width: 14),
+                  const Text(
+                    'Operator Profile',
+                    style: TextStyle(
+                      color: AppTheme.textDark,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+            ),
 
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
-                  children: [
-                    // Avatar & Name
-                    _buildProfileHero(user?.username ?? ''),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  // Avatar & Name
+                  _buildProfileHero(user),
 
-                    const SizedBox(height: 28),
+                  const SizedBox(height: 28),
 
-                    // Approval status
-                    if (user != null && !user.isApproved)
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: AppTheme.accent.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                              color: AppTheme.accent.withOpacity(0.3)),
-                        ),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.info_outline_rounded,
-                                color: AppTheme.accent, size: 18),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                'Your account is pending admin approval.',
-                                style: TextStyle(
-                                    color: AppTheme.accent, fontSize: 13),
-                              ),
-                            ),
-                          ],
-                        ),
+                  // Approval status
+                  if (user != null && !user.isApproved)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.orange.withOpacity(0.3)),
                       ),
-
-                    // Account Info
-                    _SectionCard(
-                      title: 'Account Info',
-                      icon: Icons.person_outline_rounded,
-                      children: [
-                        _ProfileRow('Username', user?.username ?? '—'),
-                        _ProfileRow('Email', user?.email ?? '—'),
-                        _ProfileRow('Role', user?.role ?? '—'),
-                        _ProfileRow('Wilaya', user?.wilaya ?? '—'),
-                        _ProfileRow('Status', user?.approvalStatus ?? '—',
-                            valueColor: user?.isApproved == true
-                                ? AppTheme.statusDelivered
-                                : AppTheme.accent),
-                      ],
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Vehicle Info
-                    if (user != null)
-                      _SectionCard(
-                        title: 'Vehicle Info',
-                        icon: Icons.local_shipping_outlined,
+                      child: const Row(
                         children: [
-                          _ProfileRow('Vehicle Type', user.vehicleType),
-                          _ProfileRow('License Plate', user.licensePlate),
-                          _ProfileRow('Capacity',
-                              '${user.capacity.toStringAsFixed(1)} tons'),
+                          Icon(Icons.info_outline_rounded,
+                              color: Colors.orange, size: 18),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Your account is pending administrative approval.',
+                              style: TextStyle(
+                                  color: Colors.orange, fontSize: 13, fontWeight: FontWeight.w600),
+                            ),
+                          ),
                         ],
                       ),
+                    ),
 
-                    const SizedBox(height: 16),
+                  // Account Info
+                  _SectionCard(
+                    title: 'Authentication & Profile',
+                    icon: Icons.person_outline_rounded,
+                    children: [
+                      _ProfileRow('Username', user?.username ?? '—'),
+                      _ProfileRow('Email Address', user?.email ?? '—'),
+                      _ProfileRow('Authority Role', user?.role ?? '—'),
+                      _ProfileRow('Regional Office', user?.wilaya ?? '—'),
+                      _ProfileRow('Verification Status', user?.approvalStatus ?? '—',
+                          valueColor: user?.isApproved == true
+                              ? AppTheme.primary
+                              : Colors.orange),
+                    ],
+                  ),
 
-                    // Stats
+                  const SizedBox(height: 16),
+
+                  // Vehicle Info
+                  if (user != null)
                     _SectionCard(
-                      title: 'My Stats',
-                      icon: Icons.bar_chart_rounded,
+                      title: 'Registered Vehicle',
+                      icon: Icons.local_shipping_outlined,
                       children: [
-                        _ProfileRow('Total Deliveries',
-                            '${delivery.deliveries.length}'),
-                        _ProfileRow('Active',
-                            '${delivery.activeDeliveries.length}'),
-                        _ProfileRow('Completed',
-                            '${delivery.completedDeliveries.length}'),
+                        _ProfileRow('Vehicle Category', user.vehicleType),
+                        _ProfileRow('License Plate', user.licensePlate),
+                        _ProfileRow('Load Capacity',
+                            '${user.capacity.toStringAsFixed(1)} metric tons'),
                       ],
                     ),
 
-                    const SizedBox(height: 30),
+                  const SizedBox(height: 16),
 
-                    // Logout button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: OutlinedButton.icon(
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (ctx) => AlertDialog(
-                              backgroundColor: AppTheme.bgSurface,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              title: const Text('Sign Out',
-                                  style: TextStyle(
-                                      color: AppTheme.textPrimary)),
-                              content: const Text(
-                                  'Are you sure you want to sign out?',
-                                  style: TextStyle(
-                                      color: AppTheme.textSecondary)),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, false),
-                                  child: const Text('Cancel'),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () =>
-                                      Navigator.pop(ctx, true),
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          AppTheme.statusCancelled),
-                                  child: const Text('Sign Out'),
-                                ),
-                              ],
-                            ),
-                          );
+                  // Stats
+                  _SectionCard(
+                    title: 'Operational Stats',
+                    icon: Icons.bar_chart_rounded,
+                    children: [
+                      _ProfileRow('Total Logistics Handled',
+                          '${delivery.deliveries.length}'),
+                      _ProfileRow('Active Shipments',
+                          '${delivery.activeDeliveries.length}'),
+                      _ProfileRow('Successful Deliveries',
+                          '${delivery.completedDeliveries.length}'),
+                    ],
+                  ),
 
-                          if (confirm == true && context.mounted) {
-                            await context.read<AuthProvider>().logout();
-                          }
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppTheme.statusCancelled,
-                          side: const BorderSide(
-                              color: AppTheme.statusCancelled, width: 1.5),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
-                        ),
-                        icon: const Icon(Icons.logout_rounded, size: 18),
-                        label: const Text(
-                          'Sign Out',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w700),
-                        ),
+                  const SizedBox(height: 30),
+
+                  // Logout button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            title: const Text('Confirm Sign Out',
+                                style: TextStyle(
+                                    color: AppTheme.textDark, fontWeight: FontWeight.w800)),
+                            content: const Text(
+                                'Are you sure you want to end your current session?',
+                                style: TextStyle(
+                                    color: AppTheme.textMutedLight)),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.pop(ctx, false),
+                                child: const Text('Cancel', style: TextStyle(color: AppTheme.textMutedLight, fontWeight: FontWeight.w600)),
+                              ),
+                              ElevatedButton(
+                                onPressed: () =>
+                                    Navigator.pop(ctx, true),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red.shade600,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0),
+                                child: const Text('Sign Out'),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true && context.mounted) {
+                          await context.read<AuthProvider>().logout();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.red.shade600,
+                        elevation: 0,
+                        side: BorderSide(color: Colors.red.shade100, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
                       ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // App version
-                    const Center(
-                      child: Text(
-                        'AgriGov Transporter v1.0.0',
+                      icon: const Icon(Icons.logout_rounded, size: 18),
+                      label: const Text(
+                        'Terminate Session',
                         style: TextStyle(
-                            color: AppTheme.textMuted, fontSize: 12),
+                            fontSize: 15, fontWeight: FontWeight.w800),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // App version
+                  Center(
+                    child: Text(
+                      'Institutional Logistics Portal v2.4.1',
+                      style: TextStyle(
+                          color: AppTheme.textMutedLight.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileHero(String username) {
+  Widget _buildProfileHero(UserModel? user) {
+    final username = user?.username ?? '';
+    final profileImg = user?.profileImage;
+
     return Center(
       child: Column(
         children: [
           Container(
-            width: 90,
-            height: 90,
+            width: 100,
+            height: 100,
             decoration: BoxDecoration(
-              gradient: AppTheme.primaryGradient,
+              color: AppTheme.primary,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primary.withOpacity(0.4),
-                  blurRadius: 24,
-                  spreadRadius: 4,
+                  color: AppTheme.primary.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
                 ),
               ],
             ),
-            child: Center(
-              child: Text(
-                username.isNotEmpty
-                    ? username[0].toUpperCase()
-                    : 'T',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 38,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
+            child: ClipOval(
+              child: profileImg != null
+                  ? Image.network(
+                      profileImg.startsWith('http')
+                          ? profileImg
+                          : '$kBaseUrl$profileImg',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: Text(
+                          username.isNotEmpty
+                              ? username.substring(0, 2).toUpperCase()
+                              : 'OP',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        username.isNotEmpty
+                            ? username.substring(0, 2).toUpperCase()
+                            : 'OP',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
             ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Text(
             username,
             style: const TextStyle(
-              color: AppTheme.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
+              color: AppTheme.textDark,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: 4),
           Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(20),
+              color: AppTheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: const Text(
-              'TRANSPORTER',
+              'CERTIFIED OPERATOR',
               style: TextStyle(
-                color: AppTheme.primaryLight,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1.5,
+                color: AppTheme.primary,
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 1.2,
               ),
             ),
           ),
@@ -293,30 +317,30 @@ class _SectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.textMuted.withOpacity(0.15)),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: AppTheme.primary, size: 18),
-              const SizedBox(width: 8),
+              Icon(icon, color: AppTheme.primary, size: 20),
+              const SizedBox(width: 10),
               Text(
                 title,
                 style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textDark,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
           ...children,
         ],
       ),
@@ -334,19 +358,19 @@ class _ProfileRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label,
               style: const TextStyle(
-                  color: AppTheme.textSecondary, fontSize: 13)),
+                  color: AppTheme.textMutedLight, fontSize: 13, fontWeight: FontWeight.w500)),
           Text(
             value,
             style: TextStyle(
-              color: valueColor ?? AppTheme.textPrimary,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+              color: valueColor ?? AppTheme.textDark,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],

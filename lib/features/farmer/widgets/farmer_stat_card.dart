@@ -20,34 +20,27 @@ class FarmerStatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.25)),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          )
-        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8), // Institutional 0.5rem
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(8),
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(6),
             ),
-            child: Icon(icon, color: color, size: 18),
+            child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Text(
             value,
-            style: TextStyle(
-              color: color,
+            style: const TextStyle(
+              color: AppTheme.textDark,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -56,11 +49,12 @@ class FarmerStatCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            label,
+            label.toUpperCase(),
             style: const TextStyle(
-              color: AppTheme.textSecondary,
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
+              color: AppTheme.textMutedLight,
+              fontSize: 9,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

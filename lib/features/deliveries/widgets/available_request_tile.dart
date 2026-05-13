@@ -19,9 +19,9 @@ class AvailableRequestTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: AppTheme.cardGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.textMuted.withOpacity(0.15)),
+        border: Border.all(color: AppTheme.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,14 +44,14 @@ class AvailableRequestTile extends StatelessWidget {
                     Text(
                       productName,
                       style: const TextStyle(
-                        color: AppTheme.textPrimary,
+                        color: AppTheme.textDark,
                         fontSize: 15,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                     Text(
                       'Order #${request['id']}',
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                      style: const TextStyle(color: AppTheme.textMutedLight, fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -60,11 +60,11 @@ class AvailableRequestTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text(
-                  'Available',
-                  style: TextStyle(color: Colors.blue, fontSize: 11, fontWeight: FontWeight.w700),
+                  'MARKET',
+                  style: TextStyle(color: Colors.blue, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 0.5),
                 ),
               ),
             ],
@@ -74,17 +74,17 @@ class AvailableRequestTile extends StatelessWidget {
           // Locations
           Row(
             children: [
-              _LocationInfo(icon: Icons.agriculture_rounded, label: farmerWilaya, color: Colors.green),
+              _LocationInfo(icon: Icons.agriculture_rounded, label: farmerWilaya, color: const Color(0xFF065F46)),
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Icon(Icons.arrow_forward_rounded, color: AppTheme.textMuted, size: 14),
+                padding: EdgeInsets.symmetric(horizontal: 12),
+                child: Icon(Icons.arrow_forward_rounded, color: AppTheme.textMutedLight, size: 14),
               ),
-              _LocationInfo(icon: Icons.shopping_cart_rounded, label: buyerWilaya, color: Colors.blue),
+              _LocationInfo(icon: Icons.location_on_rounded, label: buyerWilaya, color: Colors.blue),
             ],
           ),
           
           const SizedBox(height: 16),
-          const Divider(height: 1, color: Color(0xFF2A3545)),
+          const Divider(height: 1, color: AppTheme.borderLight),
           const SizedBox(height: 16),
           
           Row(
@@ -93,10 +93,10 @@ class AvailableRequestTile extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Delivery Fee', style: TextStyle(color: AppTheme.textMuted, fontSize: 11)),
+                  const Text('Expected Revenue', style: TextStyle(color: AppTheme.textMutedLight, fontSize: 11, fontWeight: FontWeight.w600)),
                   Text(
                     '${fee.toStringAsFixed(0)} DA',
-                    style: const TextStyle(color: AppTheme.primary, fontSize: 16, fontWeight: FontWeight.w800),
+                    style: const TextStyle(color: AppTheme.textDark, fontSize: 18, fontWeight: FontWeight.w800),
                   ),
                 ],
               ),
@@ -110,14 +110,13 @@ class AvailableRequestTile extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.bgSurface,
-                  foregroundColor: AppTheme.textPrimary,
+                  backgroundColor: AppTheme.bgLight,
+                  foregroundColor: AppTheme.textDark,
                   elevation: 0,
-                  side: BorderSide(color: AppTheme.textMuted.withOpacity(0.3)),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
-                child: const Text('View Route', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                child: const Text('View Route', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
               ),
             ],
           ),
@@ -139,12 +138,12 @@ class _LocationInfo extends StatelessWidget {
     return Expanded(
       child: Row(
         children: [
-          Icon(icon, color: color.withOpacity(0.7), size: 14),
-          const SizedBox(width: 6),
+          Icon(icon, color: color.withOpacity(0.8), size: 16),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+              style: const TextStyle(color: AppTheme.textMutedLight, fontSize: 13, fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),
           ),
