@@ -133,7 +133,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           crossAxisCount: 2,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.58,
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) => _ProductCard(product: products[index]),
@@ -306,6 +306,7 @@ class _ProductCard extends StatelessWidget {
   void _showBuySheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => _BuyBottomSheet(product: product),
     );
@@ -327,15 +328,21 @@ class _BuyBottomSheetState extends State<_BuyBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        top: 24,
+        bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+      ),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -359,7 +366,7 @@ class _BuyBottomSheetState extends State<_BuyBottomSheet> {
                   children: [
                     Text(widget.product.name, style: const TextStyle(color: AppTheme.textDark, fontSize: 16, fontWeight: FontWeight.w700)),
                     Text('${widget.product.farmerName} · ${widget.product.farmerWilaya}', style: const TextStyle(color: AppTheme.textMutedLight, fontSize: 13)),
-                  ],
+                   ],
                 ),
               ),
             ],
@@ -405,6 +412,7 @@ class _BuyBottomSheetState extends State<_BuyBottomSheet> {
             ),
           ),
         ],
+      ),
       ),
     );
   }

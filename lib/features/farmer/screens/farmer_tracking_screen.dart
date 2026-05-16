@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/constants/app_constants.dart';
 import '../providers/farmer_provider.dart';
 import '../models/farmer_order_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FarmerTrackingScreen extends StatefulWidget {
   const FarmerTrackingScreen({super.key});
@@ -214,6 +216,22 @@ class _FarmerTrackingCard extends StatelessWidget {
                   ),
                 ),
                 _StatusBadge(status: status),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () async {
+                    final url = Uri.parse('$kBaseUrl/api/market/orders/${order.id}/download_pdf/');
+                    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Could not open PDF')),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.download_rounded, color: AppTheme.primary, size: 20),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
               ],
             ),
           ),

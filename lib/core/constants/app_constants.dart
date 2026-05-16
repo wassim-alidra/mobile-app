@@ -1,7 +1,7 @@
 // Base URL for the AgriGov Django backend
 // Use '10.0.2.2' for Android Emulator to access host's localhost
 // Use your local IP (e.g. 192.168.1.X) for physical devices
-const String kBaseUrl = 'http://192.168.1.17:8000'; // For Physical Device
+const String kBaseUrl = 'http://192.168.100.8:8000'; // For Physical Device
 // const String kBaseUrl = 'http://10.0.2.2:8000'; // For Emulator
 
 const String kApiUrl = '$kBaseUrl/api';
@@ -19,6 +19,11 @@ const String kAvailableOrdersEndpoint = '/market/deliveries/available_orders/';
 const String kOrdersEndpoint = '/market/orders/';
 const String kNotificationsEndpoint = '/market/notifications/';
 const String kRoutingEndpoint = '/routing/calculate/';
+
+// Equipment Provider Endpoints
+const String kEquipmentEndpoint = '/market/equipment/';
+const String kEquipmentBookingsEndpoint = '/market/equipment-bookings/';
+const String kMarkNotificationsReadEndpoint = '/market/notifications/mark_all_as_read/';
 
 // Storage Keys
 const String kTokenKey = 'auth_token';

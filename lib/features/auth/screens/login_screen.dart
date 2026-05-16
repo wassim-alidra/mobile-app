@@ -270,12 +270,12 @@ class _LoginScreenState extends State<LoginScreen>
               decoration: InputDecoration(
                 filled: true,
                 fillColor: AppTheme.bgLight.withOpacity(0.5),
-                hintText: 'e.g. operator_24',
-                prefixIcon: const Icon(
-                  Icons.badge_outlined,
-                  color: AppTheme.textMutedLight,
-                  size: 20,
-                ),
+               hintText: 'Enter your username',
+hintStyle: const TextStyle(
+  color: AppTheme.textMutedLight,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -304,12 +304,12 @@ class _LoginScreenState extends State<LoginScreen>
               decoration: InputDecoration(
                 filled: true,
                 fillColor: AppTheme.bgLight.withOpacity(0.5),
-                hintText: '••••••••',
-                prefixIcon: const Icon(
-                  Icons.key_outlined,
-                  color: AppTheme.textMutedLight,
-                  size: 20,
-                ),
+               hintText: 'Enter your password',
+hintStyle: const TextStyle(
+  color: AppTheme.textMutedLight,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscurePassword

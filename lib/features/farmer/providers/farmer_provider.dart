@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import '../../../core/services/api_service.dart';
 import '../models/farmer_order_model.dart';
 import '../../auth/models/user_model.dart';
+import '../../equipment_provider/models/equipment_model.dart';
+import '../../equipment_provider/models/equipment_booking_model.dart';
 
 class FarmerProvider extends ChangeNotifier {
   UserModel? _user;
@@ -13,12 +15,15 @@ class FarmerProvider extends ChangeNotifier {
   FarmerStatsModel? _stats;
   FarmerChartStats? _chartStats;
   List<FarmerOrderModel> _orders = [];
+  List<EquipmentModel> _equipment = [];
+  List<EquipmentBookingModel> _equipmentBookings = [];
   List<FireAlert> _fireAlerts = [];
   bool _hasFireAlert = false;
 
   bool _loadingStats = false;
   bool _loadingOrders = false;
   bool _loadingChart = false;
+  bool _loadingEquipment = false;
   String? _error;
 
   Timer? _iotTimer;
@@ -28,11 +33,14 @@ class FarmerProvider extends ChangeNotifier {
   FarmerStatsModel? get stats => _stats;
   FarmerChartStats? get chartStats => _chartStats;
   List<FarmerOrderModel> get orders => _orders;
+  List<EquipmentModel> get equipment => _equipment;
+  List<EquipmentBookingModel> get equipmentBookings => _equipmentBookings;
   List<FireAlert> get fireAlerts => _fireAlerts;
   bool get hasFireAlert => _hasFireAlert;
   bool get loadingStats => _loadingStats;
   bool get loadingOrders => _loadingOrders;
   bool get loadingChart => _loadingChart;
+  bool get loadingEquipment => _loadingEquipment;
   String? get error => _error;
 
   List<FarmerOrderModel> get pendingOrders =>
@@ -52,6 +60,7 @@ class FarmerProvider extends ChangeNotifier {
         fetchStats();
         fetchOrders();
         fetchChartStats();
+        fetchEquipmentAndBookings();
       } else {
         _stopIotPolling();
       }
@@ -153,6 +162,44 @@ class FarmerProvider extends ChangeNotifier {
       await _fetchFireAlerts();
       return true;
     } catch (e) {
+      return false;
+    }
+  }
+
+  // ── Equipment Fetching ─────────────────────────────────────────
+  Future<void> fetchEquipmentAndBookings() async {
+    _loadingEquipment = true;
+    notifyListeners();
+
+    try {
+      final equipData = await _api.get('/market/equipment/');
+      List<dynamic> eqList = (equipData is Map && equipData.containsKey('results')) ? equipData['results'] : (equipData is List ? equipData : []);
+      _equipment = eqList.map((e) => EquipmentModel.fromJson(e as Map<String, dynamic>)).toList();
+
+      final bookData = await _api.get('/market/equipment-bookings/');
+      List<dynamic> bkList = (bookData is Map && bookData.containsKey('results')) ? bookData['results'] : (bookData is List ? bookData : []);
+      _equipmentBookings = bkList.map((e) => EquipmentBookingModel.fromJson(e as Map<String, dynamic>)).toList();
+
+    } catch (e) {
+      _error = 'Failed to load equipment data';
+    } finally {
+      _loadingEquipment = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> bookEquipment(int equipmentId, int requestedQuantity, int rentalDays) async {
+    try {
+      await _api.post('/market/equipment-bookings/', {
+        'equipment': equipmentId,
+        'requested_quantity': requestedQuantity,
+        'rental_days': rentalDays,
+      });
+      await fetchEquipmentAndBookings();
+      return true;
+    } catch (e) {
+      _error = 'Failed to book equipment';
+      notifyListeners();
       return false;
     }
   }

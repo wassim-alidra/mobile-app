@@ -49,6 +49,11 @@ class BuyerOrderModel {
   final String status;
   final DateTime createdAt;
   final String farmerName;
+  final String? farmerPhone;
+  final String? farmerWilaya;
+  final String? buyerName;
+  final String? buyerPhone;
+  final String? buyerWilaya;
   final String? deliveryStatus;
 
   BuyerOrderModel({
@@ -59,6 +64,11 @@ class BuyerOrderModel {
     required this.status,
     required this.createdAt,
     required this.farmerName,
+    this.farmerPhone,
+    this.farmerWilaya,
+    this.buyerName,
+    this.buyerPhone,
+    this.buyerWilaya,
     this.deliveryStatus,
   });
 
@@ -71,6 +81,11 @@ class BuyerOrderModel {
       status: json['status'] ?? 'PENDING',
       createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
       farmerName: json['farmer_name'] ?? 'Farmer',
+      farmerPhone: json['farmer_phone'],
+      farmerWilaya: json['farmer_wilaya'] ?? json['farm_wilaya'],
+      buyerName: json['buyer_name'],
+      buyerPhone: json['buyer_phone'],
+      buyerWilaya: json['buyer_wilaya'],
       deliveryStatus: json['delivery_status'],
     );
   }

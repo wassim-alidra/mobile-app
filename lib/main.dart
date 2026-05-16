@@ -8,7 +8,7 @@ import 'features/deliveries/providers/delivery_provider.dart';
 import 'features/notifications/providers/notification_provider.dart';
 import 'features/farmer/providers/farmer_provider.dart';
 import 'features/buyer/providers/buyer_provider.dart';
-import 'features/auth/models/user_model.dart';
+import 'features/equipment_provider/providers/equipment_provider_provider.dart';
 
 
 void main() async {
@@ -63,6 +63,15 @@ class AgriGovTransporterApp extends StatelessWidget {
           update: (_, auth, buyer) {
             buyer!.setToken(auth.token);
             return buyer;
+          },
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, EquipmentProviderProvider>(
+          create: (_) => EquipmentProviderProvider(),
+          update: (_, auth, ep) {
+            if (auth.user?.role == 'EQUIPMENT_PROVIDER') {
+              ep!.setToken(auth.token);
+            }
+            return ep!;
           },
         ),
 

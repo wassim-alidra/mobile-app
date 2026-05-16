@@ -91,10 +91,13 @@ class AuthProvider extends ChangeNotifier {
       final userData = await userApi.getCurrentUser();
       _user = UserModel.fromJson(userData);
 
-      // Verify user is a transporter, farmer or buyer
-      if (_user!.role != 'TRANSPORTER' && _user!.role != 'FARMER' && _user!.role != 'BUYER') {
+      // Verify user is a supported role
+      if (_user!.role != 'TRANSPORTER' &&
+          _user!.role != 'FARMER' &&
+          _user!.role != 'BUYER' &&
+          _user!.role != 'EQUIPMENT_PROVIDER') {
         _status = AuthStatus.unauthenticated;
-        _errorMessage = 'This app is for transporters, farmers and buyers only.';
+        _errorMessage = 'This app is for transporters, farmers, buyers and equipment providers only.';
         _token = null;
         _refreshToken = null;
         _user = null;

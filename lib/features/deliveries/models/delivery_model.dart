@@ -7,6 +7,8 @@ class DeliveryModel {
   final String? deliveryDate;
   final OrderInfo order;
   final TransporterInfo? transporter;
+  final String? farmerPhone;
+  final String? buyerPhone;
 
   const DeliveryModel({
     required this.id,
@@ -17,17 +19,21 @@ class DeliveryModel {
     this.deliveryDate,
     required this.order,
     this.transporter,
+    this.farmerPhone,
+    this.buyerPhone,
   });
 
   factory DeliveryModel.fromJson(Map<String, dynamic> json) {
     final orderData = json['order'] as Map<String, dynamic>? ?? {};
     return DeliveryModel(
       id: json['id'] as int,
-      orderId: json['order_id'] as int? ?? orderData['id'] as int? ?? 0,
+      orderId: json['order_id'] as int? ?? orderData['id'] as int? ?? (json['order'] is int ? json['order'] as int : 0),
       status: json['status'] as String? ?? 'ASSIGNED',
       deliveryFee: (json['delivery_fee'] as num?)?.toDouble() ?? 0.0,
       pickupDate: json['pickup_date'] as String?,
       deliveryDate: json['delivery_date'] as String?,
+      farmerPhone: json['farmer_phone'] as String?,
+      buyerPhone: json['buyer_phone'] as String?,
       order: OrderInfo.fromJson(orderData),
       transporter: json['transporter'] != null
           ? TransporterInfo.fromJson(json['transporter'] as Map<String, dynamic>)

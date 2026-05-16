@@ -13,11 +13,14 @@ import '../../farmer/screens/farmer_home_screen.dart';
 import '../../farmer/screens/farmer_orders_screen.dart';
 import '../../farmer/screens/farmer_tracking_screen.dart';
 import '../../farmer/screens/farmer_stats_screen.dart';
+import '../../farmer/screens/farmer_equipment_screen.dart';
 // Buyer Screens
 import '../../buyer/screens/marketplace_screen.dart';
 import '../../buyer/screens/buyer_orders_screen.dart';
 import '../../buyer/screens/track_delivery_screen.dart';
 import '../../profile/screens/profile_screen.dart';
+// Equipment Provider
+import '../../equipment_provider/screens/equipment_provider_dashboard_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -64,6 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     final user = auth.user;
     final isFarmer = user?.role == 'FARMER';
     final isBuyer = user?.role == 'BUYER';
+    final isEquipmentProvider = user?.role == 'EQUIPMENT_PROVIDER';
 
     if (isFarmer) {
       return Scaffold(
@@ -73,6 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             FarmerHomeScreen(),
             FarmerOrdersScreen(),
             FarmerTrackingScreen(),
+            FarmerEquipmentScreen(),
             FarmerStatsScreen(),
             ProfileScreen(),
           ],
@@ -94,6 +99,10 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
         bottomNavigationBar: _buildBuyerBottomNav(),
       );
+    }
+
+    if (isEquipmentProvider) {
+      return const EquipmentProviderDashboardScreen();
     }
 
     // New Institutional Transporter View
@@ -514,8 +523,9 @@ class _DashboardScreenState extends State<DashboardScreen>
               _NavItem(icon: Icons.home_filled, label: 'Home', isActive: _currentIndex == 0, onTap: () => setState(() => _currentIndex = 0)),
               _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders', isActive: _currentIndex == 1, onTap: () => setState(() => _currentIndex = 1)),
               _NavItem(icon: Icons.local_shipping_rounded, label: 'Tracking', isActive: _currentIndex == 2, onTap: () => setState(() => _currentIndex = 2)),
-              _NavItem(icon: Icons.bar_chart_rounded, label: 'Stats', isActive: _currentIndex == 3, onTap: () => setState(() => _currentIndex = 3)),
-              _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 4, onTap: () => setState(() => _currentIndex = 4)),
+              _NavItem(icon: Icons.handyman_rounded, label: 'Equipment', isActive: _currentIndex == 3, onTap: () => setState(() => _currentIndex = 3)),
+              _NavItem(icon: Icons.bar_chart_rounded, label: 'Stats', isActive: _currentIndex == 4, onTap: () => setState(() => _currentIndex = 4)),
+              _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 5, onTap: () => setState(() => _currentIndex = 5)),
             ],
           ),
         ),
@@ -707,7 +717,7 @@ class _NavItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: isActive ? AppTheme.primary : Colors.transparent,
               borderRadius: BorderRadius.circular(8),

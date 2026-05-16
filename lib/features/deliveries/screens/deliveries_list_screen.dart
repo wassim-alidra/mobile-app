@@ -5,6 +5,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../deliveries/providers/delivery_provider.dart';
 import '../../deliveries/models/delivery_model.dart';
 import '../widgets/available_request_tile.dart';
+import '../widgets/transporter_order_details_sheet.dart';
 
 class DeliveriesListScreen extends StatefulWidget {
   const DeliveriesListScreen({super.key});
@@ -348,6 +349,25 @@ class _DeliveryListTile extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => TransporterOrderDetailsSheet(delivery: delivery),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: AppTheme.borderLight),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                child: const Text('View Order Details', style: TextStyle(color: AppTheme.textDark, fontSize: 13, fontWeight: FontWeight.w700)),
+              ),
             ),
           ],
         ),

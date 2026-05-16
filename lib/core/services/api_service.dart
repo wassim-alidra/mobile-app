@@ -195,6 +195,15 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  Future<dynamic> delete(String endpoint) async {
+    final response = await http.delete(
+      Uri.parse('$kApiUrl$endpoint'),
+      headers: _headers,
+    );
+    if (response.statusCode == 204) return null;
+    return _handleResponse(response);
+  }
+
   // ─── Helper ──────────────────────────────────────────────────────
 
   dynamic _handleResponse(http.Response response) {

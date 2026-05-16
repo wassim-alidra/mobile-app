@@ -5,6 +5,7 @@ import '../../../core/theme/app_theme.dart';
 import '../providers/delivery_provider.dart';
 import '../models/delivery_model.dart';
 import '../widgets/route_map_bottom_sheet.dart';
+import '../widgets/transporter_order_details_sheet.dart';
 
 class DeliveryDetailScreen extends StatefulWidget {
   final int deliveryId;
@@ -166,6 +167,28 @@ class _DeliveryDetailScreenState extends State<DeliveryDetailScreen> {
                 ),
             ],
           ),
+          const Spacer(),
+          if (_delivery != null)
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => TransporterOrderDetailsSheet(delivery: _delivery!),
+                );
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.info_outline_rounded,
+                    color: AppTheme.primary, size: 20),
+              ),
+            ),
         ],
       ),
     );
