@@ -57,7 +57,10 @@ class ApiService {
     if (data is Map && data.containsKey('results')) {
       return data['results'] as List<dynamic>;
     }
-    return data as List<dynamic>? ?? [];
+    if (data is List) {
+      return data;
+    }
+    return [];
   }
 
   Future<List<dynamic>> getAvailableOrders() async {
@@ -69,7 +72,10 @@ class ApiService {
     if (data is Map && data.containsKey('results')) {
       return data['results'] as List<dynamic>;
     }
-    return data as List<dynamic>? ?? [];
+    if (data is List) {
+      return data;
+    }
+    return [];
   }
 
   Future<Map<String, dynamic>> acceptDelivery(int orderId) async {
@@ -131,10 +137,13 @@ class ApiService {
       headers: _headers,
     );
     final data = _handleResponse(response);
-    if (data.containsKey('results')) {
+    if (data is Map && data.containsKey('results')) {
       return data['results'] as List<dynamic>;
     }
-    return data as List<dynamic>? ?? [];
+    if (data is List) {
+      return data;
+    }
+    return [];
   }
 
   Future<void> markNotificationRead(int id) async {
@@ -146,13 +155,10 @@ class ApiService {
   }
 
   Future<void> markAllNotificationsRead() async {
-    // Get all unread notifications and mark them read
-    final notifs = await getNotifications();
-    for (final n in notifs) {
-      if (n['is_read'] == false) {
-        await markNotificationRead(n['id'] as int);
-      }
-    }
+    await http.post(
+      Uri.parse('$kApiUrl$kMarkNotificationsReadEndpoint'),
+      headers: _headers,
+    );
   }
 
   // ─── Profile ─────────────────────────────────────────────────────

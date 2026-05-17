@@ -4,6 +4,8 @@ import '../../../../core/theme/app_theme.dart';
 import '../providers/buyer_provider.dart';
 import '../models/buyer_models.dart';
 
+import 'package:go_router/go_router.dart';
+import '../../notifications/providers/notification_provider.dart';
 import '../../../../core/constants/app_constants.dart';
 
 class MarketplaceScreen extends StatefulWidget {
@@ -68,16 +70,70 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           children: [
             Row(
               children: [
-                Image.asset('assets/images/logo.PNG', height: 24),
-                const SizedBox(width: 8),
-                const Text(
-                  'INSTITUTIONAL MARKETPLACE',
-                  style: TextStyle(
-                    color: AppTheme.primary,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
+                Expanded(
+                  child: Row(
+                    children: [
+                      Image.asset('assets/images/logo.PNG', height: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'INSTITUTIONAL MARKETPLACE',
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                Consumer<NotificationProvider>(
+                  builder: (context, provider, _) {
+                    final unread = provider.unreadCount;
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppTheme.borderLight),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.textDark, size: 22),
+                            onPressed: () => context.push('/notifications'),
+                            constraints: const BoxConstraints(),
+                            padding: const EdgeInsets.all(8),
+                          ),
+                        ),
+                        if (unread > 0)
+                          Positioned(
+                            top: -4,
+                            right: -4,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Text(
+                                unread > 9 ? '9+' : '$unread',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),

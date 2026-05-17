@@ -15,12 +15,15 @@ import '../../farmer/screens/farmer_tracking_screen.dart';
 import '../../farmer/screens/farmer_stats_screen.dart';
 import '../../farmer/screens/farmer_equipment_screen.dart';
 // Buyer Screens
+import '../../buyer/screens/buyer_home_screen.dart';
 import '../../buyer/screens/marketplace_screen.dart';
 import '../../buyer/screens/buyer_orders_screen.dart';
 import '../../buyer/screens/track_delivery_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 // Equipment Provider
 import '../../equipment_provider/screens/equipment_provider_dashboard_screen.dart';
+// Weather
+import '../../weather/screens/weather_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -78,6 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             FarmerOrdersScreen(),
             FarmerTrackingScreen(),
             FarmerEquipmentScreen(),
+            WeatherScreen(),
             FarmerStatsScreen(),
             ProfileScreen(),
           ],
@@ -90,11 +94,12 @@ class _DashboardScreenState extends State<DashboardScreen>
       return Scaffold(
         body: IndexedStack(
           index: _currentIndex,
-          children: const [
-            MarketplaceScreen(),
-            BuyerOrdersScreen(),
-            TrackDeliveryScreen(),
-            ProfileScreen(),
+          children: [
+            BuyerHomeScreen(onNavigate: (i) => setState(() => _currentIndex = i)),
+            const MarketplaceScreen(),
+            const BuyerOrdersScreen(),
+            const TrackDeliveryScreen(),
+            const ProfileScreen(),
           ],
         ),
         bottomNavigationBar: _buildBuyerBottomNav(),
@@ -146,9 +151,44 @@ class _DashboardScreenState extends State<DashboardScreen>
         child: Image.asset('assets/images/logo.PNG', fit: BoxFit.contain),
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.notifications_none_rounded),
-          onPressed: () => context.push('/notifications'),
+        Consumer<NotificationProvider>(
+          builder: (context, provider, _) {
+            final unread = provider.unreadCount;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications_none_rounded),
+                  onPressed: () => context.push('/notifications'),
+                ),
+                if (unread > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        unread > 9 ? '9+' : '$unread',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
         Container(
           margin: const EdgeInsets.only(right: 16, left: 8),
@@ -493,14 +533,15 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _NavItem(icon: Icons.storefront_rounded, label: 'Market', isActive: _currentIndex == 0, onTap: () => setState(() => _currentIndex = 0)),
-              _NavItem(icon: Icons.receipt_rounded, label: 'Orders', isActive: _currentIndex == 1, onTap: () => setState(() => _currentIndex = 1)),
-              _NavItem(icon: Icons.local_shipping_rounded, label: 'Tracking', isActive: _currentIndex == 2, onTap: () => setState(() => _currentIndex = 2)),
-              _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 3, onTap: () => setState(() => _currentIndex = 3)),
+              _NavItem(icon: Icons.home_filled, label: 'Home', isActive: _currentIndex == 0, onTap: () => setState(() => _currentIndex = 0)),
+              _NavItem(icon: Icons.storefront_rounded, label: 'Market', isActive: _currentIndex == 1, onTap: () => setState(() => _currentIndex = 1)),
+              _NavItem(icon: Icons.receipt_rounded, label: 'Orders', isActive: _currentIndex == 2, onTap: () => setState(() => _currentIndex = 2)),
+              _NavItem(icon: Icons.local_shipping_rounded, label: 'Tracking', isActive: _currentIndex == 3, onTap: () => setState(() => _currentIndex = 3)),
+              _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 4, onTap: () => setState(() => _currentIndex = 4)),
             ],
           ),
         ),
@@ -516,7 +557,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -524,8 +565,9 @@ class _DashboardScreenState extends State<DashboardScreen>
               _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders', isActive: _currentIndex == 1, onTap: () => setState(() => _currentIndex = 1)),
               _NavItem(icon: Icons.local_shipping_rounded, label: 'Tracking', isActive: _currentIndex == 2, onTap: () => setState(() => _currentIndex = 2)),
               _NavItem(icon: Icons.handyman_rounded, label: 'Equipment', isActive: _currentIndex == 3, onTap: () => setState(() => _currentIndex = 3)),
-              _NavItem(icon: Icons.bar_chart_rounded, label: 'Stats', isActive: _currentIndex == 4, onTap: () => setState(() => _currentIndex = 4)),
-              _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 5, onTap: () => setState(() => _currentIndex = 5)),
+              _NavItem(icon: Icons.cloud_rounded, label: 'Weather', isActive: _currentIndex == 4, onTap: () => setState(() => _currentIndex = 4)),
+              _NavItem(icon: Icons.bar_chart_rounded, label: 'Stats', isActive: _currentIndex == 5, onTap: () => setState(() => _currentIndex = 5)),
+              _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 6, onTap: () => setState(() => _currentIndex = 6)),
             ],
           ),
         ),

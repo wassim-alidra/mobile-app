@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../providers/farmer_provider.dart';
 import '../widgets/farmer_stat_card.dart';
 import '../widgets/farmer_order_card.dart';
+import '../../notifications/providers/notification_provider.dart';
 
 class FarmerHomeScreen extends StatefulWidget {
   const FarmerHomeScreen({super.key});
@@ -132,6 +134,55 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
                 ],
               ),
             ),
+            Consumer<NotificationProvider>(
+              builder: (context, notifProvider, _) {
+                final unread = notifProvider.unreadCount;
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppTheme.borderLight),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.notifications_none_rounded, color: AppTheme.textDark),
+                        onPressed: () => context.push('/notifications'),
+                      ),
+                    ),
+                    if (unread > 0)
+                      Positioned(
+                        top: 2,
+                        right: 2,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            unread > 9 ? '9+' : '$unread',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+            if (provider.hasFireAlert)
+              const SizedBox(width: 8),
             if (provider.hasFireAlert)
               Container(
                 padding: const EdgeInsets.all(10),

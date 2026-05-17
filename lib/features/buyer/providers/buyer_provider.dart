@@ -17,6 +17,14 @@ class BuyerProvider extends ChangeNotifier {
   bool get loadingOrders => _loadingOrders;
   String? get error => _error;
 
+  // ── Computed Stats ──────────────────────────────────────────────
+  int get totalOrders => _orders.length;
+  int get pendingOrders => _orders.where((o) => o.status == 'PENDING').length;
+  int get activeOrders => _orders.where((o) => ['ACCEPTED', 'ON_WAY', 'CHARGING'].contains(o.status)).length;
+  int get deliveredOrders => _orders.where((o) => o.status == 'DELIVERED').length;
+  double get totalSpent => _orders.fold(0.0, (sum, o) => sum + o.totalPrice);
+  List<BuyerOrderModel> get recentOrders => _orders.take(3).toList();
+
   void setToken(String? token) {
     if (_token == token) return;
     _token = token;

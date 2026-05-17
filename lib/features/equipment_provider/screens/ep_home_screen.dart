@@ -70,14 +70,26 @@ class EpHomeScreen extends StatelessWidget {
                           ),
                           if (notif.unreadCount > 0)
                             Positioned(
-                              right: 8,
-                              top: 8,
+                              right: 2,
+                              top: 2,
                               child: Container(
-                                width: 10,
-                                height: 10,
+                                padding: const EdgeInsets.all(2),
                                 decoration: const BoxDecoration(
                                   color: Colors.red,
                                   shape: BoxShape.circle,
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Text(
+                                  notif.unreadCount > 9 ? '9+' : '${notif.unreadCount}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),

@@ -9,6 +9,7 @@ import 'features/notifications/providers/notification_provider.dart';
 import 'features/farmer/providers/farmer_provider.dart';
 import 'features/buyer/providers/buyer_provider.dart';
 import 'features/equipment_provider/providers/equipment_provider_provider.dart';
+import 'features/weather/providers/weather_provider.dart';
 
 
 void main() async {
@@ -74,7 +75,15 @@ class AgriGovTransporterApp extends StatelessWidget {
             return ep!;
           },
         ),
-
+        ChangeNotifierProxyProvider<AuthProvider, WeatherProvider>(
+          create: (_) => WeatherProvider(),
+          update: (_, auth, weather) {
+            if (auth.user?.role == 'FARMER') {
+              weather!.setToken(auth.token);
+            }
+            return weather!;
+          },
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, auth, _) {
