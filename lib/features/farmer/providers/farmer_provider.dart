@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../../../core/services/api_service.dart';
 import '../models/farmer_order_model.dart';
+import '../models/farmer_product_model.dart';
 import '../../auth/models/user_model.dart';
 import '../../equipment_provider/models/equipment_model.dart';
 import '../../equipment_provider/models/equipment_booking_model.dart';
+import '../../weather/models/weather_model.dart';
 
 class FarmerProvider extends ChangeNotifier {
   UserModel? _user;
@@ -18,12 +20,18 @@ class FarmerProvider extends ChangeNotifier {
   List<EquipmentModel> _equipment = [];
   List<EquipmentBookingModel> _equipmentBookings = [];
   List<FireAlert> _fireAlerts = [];
+  List<FarmModel> _farms = [];
+  List<FarmerProductModel> _products = [];
+  List<ProductCatalogModel> _catalog = [];
   bool _hasFireAlert = false;
 
   bool _loadingStats = false;
   bool _loadingOrders = false;
   bool _loadingChart = false;
   bool _loadingEquipment = false;
+  bool _loadingFarms = false;
+  bool _loadingProducts = false;
+  bool _loadingCatalog = false;
   String? _error;
 
   Timer? _iotTimer;
@@ -41,6 +49,12 @@ class FarmerProvider extends ChangeNotifier {
   bool get loadingOrders => _loadingOrders;
   bool get loadingChart => _loadingChart;
   bool get loadingEquipment => _loadingEquipment;
+  bool get loadingFarms => _loadingFarms;
+  bool get loadingProducts => _loadingProducts;
+  bool get loadingCatalog => _loadingCatalog;
+  List<FarmModel> get farms => _farms;
+  List<FarmerProductModel> get products => _products;
+  List<ProductCatalogModel> get catalog => _catalog;
   String? get error => _error;
 
   List<FarmerOrderModel> get pendingOrders =>
@@ -61,6 +75,9 @@ class FarmerProvider extends ChangeNotifier {
         fetchOrders();
         fetchChartStats();
         fetchEquipmentAndBookings();
+        fetchFarms();
+        fetchProducts();
+        fetchCatalog();
       } else {
         _stopIotPolling();
       }
@@ -201,6 +218,203 @@ class FarmerProvider extends ChangeNotifier {
       _error = 'Failed to book equipment';
       notifyListeners();
       return false;
+    }
+  }
+
+  // ── Farm CRUD Operations ──────────────────────────────────────────
+  Future<void> fetchFarms() async {
+    _loadingFarms = true;
+    notifyListeners();
+    try {
+      final data = await _api.get('/farms/');
+      final list = data is List
+          ? data
+          : (data['results'] ?? data['data'] ?? data);
+      _farms = (list as List)
+          .map((e) => FarmModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _loadingFarms = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addFarm(String name, String wilaya, String location) async {
+    _loadingFarms = true;
+    notifyListeners();
+    try {
+      await _api.post('/farms/', {
+        'name': name,
+        'wilaya': wilaya,
+        'location': location,
+      });
+      await fetchFarms();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      _loadingFarms = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> updateFarm(int farmId, String name, String location) async {
+    _loadingFarms = true;
+    notifyListeners();
+    try {
+      await _api.patch('/farms/$farmId/', {
+        'name': name,
+        'location': location,
+      });
+      await fetchFarms();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      _loadingFarms = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> deleteFarm(int farmId) async {
+    _loadingFarms = true;
+    notifyListeners();
+    try {
+      await _api.delete('/farms/$farmId/');
+      await fetchFarms();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      _loadingFarms = false;
+      notifyListeners();
+    }
+  }
+
+  // ── Product CRUD Operations ──────────────────────────────────────
+  Future<void> fetchProducts() async {
+    _loadingProducts = true;
+    notifyListeners();
+    try {
+      final data = await _api.get('/market/products/');
+      final list = data is List
+          ? data
+          : (data['results'] ?? data['data'] ?? data);
+      _products = (list as List)
+          .map((e) => FarmerProductModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _loadingProducts = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchCatalog() async {
+    _loadingCatalog = true;
+    notifyListeners();
+    try {
+      final data = await _api.get('/market/catalog/');
+      final list = data is List
+          ? data
+          : (data['results'] ?? data['data'] ?? data);
+      _catalog = (list as List)
+          .map((e) => ProductCatalogModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _loadingCatalog = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addProduct({
+    required int catalogId,
+    required int farmId,
+    required double pricePerKg,
+    required double quantityAvailable,
+    required String qualityGrade,
+  }) async {
+    _loadingProducts = true;
+    notifyListeners();
+    try {
+      await _api.post('/market/products/', {
+        'catalog': catalogId,
+        'farm': farmId,
+        'price_per_kg': pricePerKg,
+        'quantity_available': quantityAvailable,
+        'quality_grade': qualityGrade,
+      });
+      await fetchProducts();
+      await fetchStats();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      _loadingProducts = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> updateProduct({
+    required int productId,
+    required int farmId,
+    required double pricePerKg,
+    required double quantityAvailable,
+    required String qualityGrade,
+  }) async {
+    _loadingProducts = true;
+    notifyListeners();
+    try {
+      await _api.patch('/market/products/$productId/', {
+        'farm': farmId,
+        'price_per_kg': pricePerKg,
+        'quantity_available': quantityAvailable,
+        'quality_grade': qualityGrade,
+      });
+      await fetchProducts();
+      await fetchStats();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      _loadingProducts = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> deleteProduct(int productId) async {
+    _loadingProducts = true;
+    notifyListeners();
+    try {
+      await _api.delete('/market/products/$productId/');
+      await fetchProducts();
+      await fetchStats();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      _loadingProducts = false;
+      notifyListeners();
     }
   }
 

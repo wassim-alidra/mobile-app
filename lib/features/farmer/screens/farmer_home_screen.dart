@@ -8,7 +8,9 @@ import '../widgets/farmer_order_card.dart';
 import '../../notifications/providers/notification_provider.dart';
 
 class FarmerHomeScreen extends StatefulWidget {
-  const FarmerHomeScreen({super.key});
+  final void Function(int index) onNavigate;
+
+  const FarmerHomeScreen({super.key, required this.onNavigate});
 
   @override
   State<FarmerHomeScreen> createState() => _FarmerHomeScreenState();
@@ -49,6 +51,9 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
                     ),
                   ),
                   SliverToBoxAdapter(
+                    child: _buildQuickActions(),
+                  ),
+                  SliverToBoxAdapter(
                       child: _buildPendingOrdersSection(provider)),
                   const SliverToBoxAdapter(child: SizedBox(height: 100)),
                 ],
@@ -67,7 +72,7 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red.withOpacity(0.3)),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -187,9 +192,9 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.red.withOpacity(0.2)),
+                  border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
                 ),
                 child: const Icon(Icons.local_fire_department_rounded,
                     color: Colors.red, size: 22),
@@ -437,4 +442,146 @@ class _FarmerHomeScreenState extends State<FarmerHomeScreen> {
       ),
     );
   }
+
+  Widget _buildQuickActions() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Quick Actions',
+            style: TextStyle(
+              color: AppTheme.textDark,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickActionTile(
+                  icon: Icons.agriculture_rounded,
+                  label: 'My\nFarms',
+                  color: const Color(0xFF10B981),
+                  onTap: () => context.push('/my-farms'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickActionTile(
+                  icon: Icons.cloud_rounded,
+                  label: 'Weather\nForecast',
+                  color: const Color(0xFF8B5CF6),
+                  onTap: () => widget.onNavigate(4),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickActionTile(
+                  icon: Icons.handyman_rounded,
+                  label: 'Equipment\nRental',
+                  color: const Color(0xFF3B82F6),
+                  onTap: () => widget.onNavigate(3),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickActionTile(
+                  icon: Icons.receipt_long_rounded,
+                  label: 'My Orders',
+                  color: AppTheme.primary,
+                  onTap: () => widget.onNavigate(1),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickActionTile(
+                  icon: Icons.bar_chart_rounded,
+                  label: 'Analytics Stats',
+                  color: const Color(0xFF0F172A),
+                  onTap: () => widget.onNavigate(5),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _QuickActionTile(
+                  icon: Icons.inventory_2_rounded,
+                  label: 'My\nProducts',
+                  color: const Color(0xFFD97706),
+                  onTap: () => context.push('/my-products'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+class _QuickActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionTile({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppTheme.borderLight),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: color, size: 22),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppTheme.textDark,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                height: 1.2,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

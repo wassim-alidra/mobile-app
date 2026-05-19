@@ -76,14 +76,16 @@ class _DashboardScreenState extends State<DashboardScreen>
       return Scaffold(
         body: IndexedStack(
           index: _currentIndex,
-          children: const [
-            FarmerHomeScreen(),
-            FarmerOrdersScreen(),
-            FarmerTrackingScreen(),
-            FarmerEquipmentScreen(),
-            WeatherScreen(),
-            FarmerStatsScreen(),
-            ProfileScreen(),
+          children: [
+            FarmerHomeScreen(
+              onNavigate: (index) => setState(() => _currentIndex = index),
+            ),
+            const FarmerOrdersScreen(),
+            const FarmerTrackingScreen(),
+            const FarmerEquipmentScreen(),
+            const WeatherScreen(),
+            const FarmerStatsScreen(),
+            const ProfileScreen(),
           ],
         ),
         bottomNavigationBar: _buildFarmerBottomNav(),
@@ -564,8 +566,6 @@ class _DashboardScreenState extends State<DashboardScreen>
               _NavItem(icon: Icons.home_filled, label: 'Home', isActive: _currentIndex == 0, onTap: () => setState(() => _currentIndex = 0)),
               _NavItem(icon: Icons.receipt_long_rounded, label: 'Orders', isActive: _currentIndex == 1, onTap: () => setState(() => _currentIndex = 1)),
               _NavItem(icon: Icons.local_shipping_rounded, label: 'Tracking', isActive: _currentIndex == 2, onTap: () => setState(() => _currentIndex = 2)),
-              _NavItem(icon: Icons.handyman_rounded, label: 'Equipment', isActive: _currentIndex == 3, onTap: () => setState(() => _currentIndex = 3)),
-              _NavItem(icon: Icons.cloud_rounded, label: 'Weather', isActive: _currentIndex == 4, onTap: () => setState(() => _currentIndex = 4)),
               _NavItem(icon: Icons.bar_chart_rounded, label: 'Stats', isActive: _currentIndex == 5, onTap: () => setState(() => _currentIndex = 5)),
               _NavItem(icon: Icons.person_rounded, label: 'Profile', isActive: _currentIndex == 6, onTap: () => setState(() => _currentIndex = 6)),
             ],

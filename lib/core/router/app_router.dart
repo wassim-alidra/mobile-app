@@ -8,6 +8,8 @@ import '../../features/deliveries/screens/deliveries_list_screen.dart';
 import '../../features/notifications/screens/notifications_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/history/screens/history_screen.dart';
+import '../../features/farmer/screens/my_farms_screen.dart';
+import '../../features/farmer/screens/my_products_screen.dart';
 
 class AppRouter {
   static GoRouter router(AuthProvider auth) {
@@ -62,6 +64,14 @@ class AppRouter {
         GoRoute(
           path: '/history',
           builder: (context, state) => const HistoryScreen(),
+        ),
+        GoRoute(
+          path: '/my-farms',
+          builder: (context, state) => const MyFarmsScreen(),
+        ),
+        GoRoute(
+          path: '/my-products',
+          builder: (context, state) => const MyProductsScreen(),
         ),
       ],
     );

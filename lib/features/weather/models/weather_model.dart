@@ -50,12 +50,20 @@ class SoilData {
   });
 
   factory SoilData.fromJson(Map<String, dynamic> json) {
+    final temp = (json['surface_temp'] as num?)?.toDouble() ?? 0.0;
+    final recommendation = json['recommendation'] as String? ?? '--';
+    final isNeeded = json['is_needed'] as bool? ?? false;
+    final urgencyScore = (json['urgency_score'] as num?)?.toDouble() ?? 0.0;
+
+    // Simulate soil moisture based on the multi-factor agronomic urgency score.
+    // High urgency_score (0 to 9+) means dry soil, so moisture is low.
+    final moisture = 1.0 - (urgencyScore.clamp(0.0, 9.0) / 9.0);
+
     return SoilData(
-      moisture: (json['moisture'] as num?)?.toDouble() ?? 0.0,
-      surfaceTemp: (json['surface_temp'] as num?)?.toDouble() ?? 0.0,
-      irrigationRecommendation:
-          json['irrigation_recommendation'] as String? ?? '--',
-      isNeeded: json['is_needed'] as bool? ?? false,
+      moisture: moisture,
+      surfaceTemp: temp,
+      irrigationRecommendation: recommendation,
+      isNeeded: isNeeded,
     );
   }
 
@@ -111,12 +119,14 @@ class FarmModel {
   final String name;
   final String wilaya;
   final String? location;
+  final bool isApproved;
 
   const FarmModel({
     required this.id,
     required this.name,
     required this.wilaya,
     this.location,
+    this.isApproved = false,
   });
 
   factory FarmModel.fromJson(Map<String, dynamic> json) {
@@ -125,6 +135,7 @@ class FarmModel {
       name: json['name'] as String? ?? 'Unknown Farm',
       wilaya: json['wilaya'] as String? ?? '--',
       location: json['location'] as String?,
+      isApproved: json['is_approved'] as bool? ?? false,
     );
   }
 }
@@ -152,7 +163,7 @@ class WeatherDashboardModel {
       lastUpdated: json['last_updated'] as String? ?? '--',
       weather: WeatherData.fromJson(
           (json['weather'] as Map<String, dynamic>?) ?? {}),
-      soil: SoilData.fromJson((json['soil'] as Map<String, dynamic>?) ?? {}),
+      soil: SoilData.fromJson((json['irrigation'] as Map<String, dynamic>?) ?? {}),
       forecast: forecastList,
     );
   }
